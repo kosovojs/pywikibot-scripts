@@ -1,3 +1,6 @@
+import pywikibot
+import toolforge
+import re
 import pywikibot, re, os, time, sys, json
 import toolforge
 from datetime import date, datetime, timedelta, timezone

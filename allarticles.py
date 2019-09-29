@@ -1,7 +1,7 @@
 import requests
 import json
 import urllib.parse
-import pywikibot, re, sys
+import pywikibot, re
 import toolforge
 
 lvsite = pywikibot.Site("lv", "wikipedia")

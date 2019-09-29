@@ -1,6 +1,6 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
-import re, pywikibot, sys
+import re, pywikibot
 from datetime import datetime
 import toolforge
 
@@ -86,4 +86,21 @@ def main():
 		
 		page.save(comment='Bots: pievienota {{izolēts raksts}} veidne', botflag=True, minor=False)
 #
+def mainOOOOOOOOOOLLLLLLLLLLLLLLDDDDDDDDDDDDDDD():
+	for article in itemlist:
+		pywikibot.output('\t'+article['title'])
+		page = pywikibot.Page(site,article['title'])
+		oldtxt = page.get()
+		
+		searchtl = re.search(reg, oldtxt)
+		
+		if searchtl:
+			print('already has template')
+			continue
+			
+		newtxt = "{{izolēts raksts|date=2017. gada aprīlis}}\n"+oldtxt
+		page.text = newtxt
+		
+		page.save(comment='Bots: pievienota {{izolēts raksts}} veidne', botflag=True, minor=False)
+		
 main()

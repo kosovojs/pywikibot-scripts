@@ -54,12 +54,13 @@ def do_api(article):
 									page=article, prop='text').submit()
 									
 	json_data = r['parse']['text']['*']
+	#itemlist = [blah['title'] for blah in json_data]
 	
-	return json_data
-
+	return json_data#[0] if len(itemlist)>0 else False
+#
 
 def main():
-	fileop = eval(open('cee-all-articles.txt', 'r', encoding='utf-8').read())
+	fileop = eval(open('cee2dfgfdfgdfgdfgdgdfgd-2-final.txt', 'r', encoding='utf-8').read())#fileop = eval(open('ceeraksti-prose.txt', 'r', encoding='utf-8').read())
 	fileop2 = open('ceeraksti-prose2.txt', 'w', encoding='utf-8')
 	
 	alreadyhave = eval(open('ceeraksti-prose22.txt', 'r', encoding='utf-8').read())

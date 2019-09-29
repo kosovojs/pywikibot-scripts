@@ -11,6 +11,8 @@ repo = site.data_repository()
 
 prop = 'P625'
 
+#os.chdir(r'projects/vkFIX')
+
 def one_item(article):
 	item = pywikibot.ItemPage(repo,article[0])
 	

@@ -1,4 +1,4 @@
-import re, pywikibot, requests, sys
+import re, pywikibot, requests
 from datetime import datetime
 import toolforge
 

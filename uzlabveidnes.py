@@ -44,11 +44,12 @@ site.get_tokens('edit')
 
 #ouarry = Quarry()
 
-SQLMAIN = """select page_namespace, page_title, rc_timestamp, rc_user_text, rc_title, rc_this_oldid, rc_params
+SQLMAIN = """select page_namespace, page_title, rc_timestamp, actor_name as rc_user_text, rc_title, rc_this_oldid, rc_params
 from recentchanges
 join page on rc_cur_id=page_id
+join actor on rc_actor=actor_id
 where rc_type=6 and rc_timestamp>{} and page_namespace=0 and rc_params like '%"added";b:0%'
-	and rc_user_text not in (select distinct user_name from user_groups join user on user_id=ug_user)
+	and actor_name not in (select distinct user_name from user_groups join user on user_id=ug_user)
 order by rc_timestamp desc
 """
 

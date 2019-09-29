@@ -10,6 +10,9 @@ repo = site.data_repository()
 
 con = lite.connect(r'fide2.db')
 
+
+#apr07datafile = eval(open('elobot-1-apr07-reals.txt', 'r', encoding='utf-8').read())
+
 curtime = datetime.now()
 #http://stackoverflow.com/questions/30071886/how-to-get-current-time-in-python-and-break-up-into-year-month-day-hour-minu
 year,mon,day = [str(curtime.year), '{:0>2}'.format(str(curtime.month)), '{:0>2}'.format(str(curtime.day))]
@@ -91,6 +94,199 @@ def format_one_claim(vars):
 #
 #format_one_claim()
 
+jfffff = """{"claims":[                    {
+                        "mainsnak": {
+                            "snaktype": "value",
+                            "property": "P1087",
+                            "datavalue": {
+                                "value": {
+                                    "amount": "+2872",
+                                    "unit": "1",
+                                    "upperBound": "+2872",
+                                    "lowerBound": "+2872"
+                                },
+                                "type": "quantity"
+                            },
+                            "datatype": "quantity"
+                        },
+                        "type": "statement",
+                        "qualifiers": {
+                            "P585": [
+                                {
+                                    "snaktype": "value",
+                                    "property": "P585",
+                                    "datavalue": {
+                                        "value": {
+                                            "time": "+2013-09-01T00:00:00Z",
+                                            "timezone": 0,
+                                            "before": 0,
+                                            "after": 0,
+                                            "precision": 10,
+                                            "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                                        },
+                                        "type": "time"
+                                    },
+                                    "datatype": "time"
+                                }
+                            ]
+                        },
+                        "qualifiers-order": [
+                            "P585"
+                        ],
+                        "rank": "normal",
+                        "references": [
+                            {
+                                "snaks": {
+                                    "P813": [
+                                        {
+                                            "snaktype": "value",
+                                            "property": "P813",
+                                            "datavalue": {
+                                                "value": {
+                                                    "time": "+2016-09-21T00:00:00Z",
+                                                    "timezone": 0,
+                                                    "before": 0,
+                                                    "after": 0,
+                                                    "precision": 11,
+                                                    "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                                                },
+                                                "type": "time"
+                                            },
+                                            "datatype": "time"
+                                        }
+                                    ],
+                                    "P1440": [
+                                        {
+                                            "snaktype": "value",
+                                            "property": "P1440",
+                                            "datavalue": {
+                                                "value": "1503014",
+                                                "type": "string"
+                                            },
+                                            "datatype": "external-id"
+                                        }
+                                    ],
+                                    "P248": [
+                                        {
+                                            "snaktype": "value",
+                                            "property": "P248",
+                                            "datavalue": {
+                                                "value": {
+                                                    "entity-type": "item",
+                                                    "numeric-id": 27038151,
+                                                    "id": "Q27038151"
+                                                },
+                                                "type": "wikibase-entityid"
+                                            },
+                                            "datatype": "wikibase-item"
+                                        }
+                                    ]
+                                },
+                                "snaks-order": [
+                                    "P813",
+                                    "P1440",
+                                    "P248"
+                                ]
+                            }
+                        ]
+                    },
+					                    {
+                        "mainsnak": {
+                            "snaktype": "value",
+                            "property": "P1087",
+                            "datavalue": {
+                                "value": {
+                                    "amount": "+2872",
+                                    "unit": "1",
+                                    "upperBound": "+2872",
+                                    "lowerBound": "+2872"
+                                },
+                                "type": "quantity"
+                            },
+                            "datatype": "quantity"
+                        },
+                        "type": "statement",
+                        "qualifiers": {
+                            "P585": [
+                                {
+                                    "snaktype": "value",
+                                    "property": "P585",
+                                    "datavalue": {
+                                        "value": {
+                                            "time": "+2013-05-01T00:00:00Z",
+                                            "timezone": 0,
+                                            "before": 0,
+                                            "after": 0,
+                                            "precision": 10,
+                                            "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                                        },
+                                        "type": "time"
+                                    },
+                                    "datatype": "time"
+                                }
+                            ]
+                        },
+                        "qualifiers-order": [
+                            "P585"
+                        ],
+                        "rank": "preferred",
+                        "references": [
+                            {
+                                "snaks": {
+                                    "P813": [
+                                        {
+                                            "snaktype": "value",
+                                            "property": "P813",
+                                            "datavalue": {
+                                                "value": {
+                                                    "time": "+2016-11-21T00:00:00Z",
+                                                    "timezone": 0,
+                                                    "before": 0,
+                                                    "after": 0,
+                                                    "precision": 11,
+                                                    "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                                                },
+                                                "type": "time"
+                                            },
+                                            "datatype": "time"
+                                        }
+                                    ],
+                                    "P1440": [
+                                        {
+                                            "snaktype": "value",
+                                            "property": "P1440",
+                                            "datavalue": {
+                                                "value": "1503014",
+                                                "type": "string"
+                                            },
+                                            "datatype": "external-id"
+                                        }
+                                    ],
+                                    "P248": [
+                                        {
+                                            "snaktype": "value",
+                                            "property": "P248",
+                                            "datavalue": {
+                                                "value": {
+                                                    "entity-type": "item",
+                                                    "numeric-id": 27038151,
+                                                    "id": "Q27038151"
+                                                },
+                                                "type": "wikibase-entityid"
+                                            },
+                                            "datatype": "wikibase-item"
+                                        }
+                                    ]
+                                },
+                                "snaks-order": [
+                                    "P813",
+                                    "P1440",
+                                    "P248"
+                                ]
+                            }
+                        ]
+                    }]}
+"""
 def removekey(d, key):
 	r = dict(d)
 	del r[key]

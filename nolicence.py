@@ -9,10 +9,11 @@ null = ''
 
 #file = eval(open("quarry-18859-files-without-licence-lvwiki-run179186.json", "r", encoding='utf-8').read())['rows']
 
-SQL = """select img_name, img_user_text, img_timestamp,
+SQL = """select img_name, actor_name as img_user_text, img_timestamp,
 	(select GROUP_CONCAT(distinct t1.tl_title separator '|') from templatelinks t1 WHERE t1.tl_from=page_id) as "Used templates",
     (SELECT count(il_from) FROM imagelinks where il_to=img_name) as "Imagelinks"
 from image
+join actor on img_actor=actor_id
 join page on img_name=page_title and page_namespace=6
 where not exists (select *
                  from templatelinks
@@ -84,3 +85,27 @@ page.save(comment='Bots: atjaunināts saraksts', botflag=False, minor=False)
 
 #fileS = open("atteli-nav lic.txt", "w", encoding='utf-8')
 #fileS.write(finalout)
+	
+	
+"""
+tpls = [f[3].split('|') for f in file if f[3]!='']
+
+gdfgf = []
+for ff in tpls:
+	gdfgf.extend(ff)
+fff = Counter(gdfgf)
+
+pywikibot.output(tpls)
+pywikibot.output(fff.most_common())
+#Category_handler, 
+#
+
+[('Imbox', 22), ('Attēla_autortiesības', 21), ('Category_handler/blacklist', 19)
+, ('Category_handler/shared', 19), ('Category_handler', 19), ('Category_handler/
+config', 19), ('Namespace_detect/config', 19), ('Message_box', 19), ('Arguments'
+, 19), ('Message_box/configuration', 19), ('HtmlBuilder', 19), ('Category_handle
+r/data', 19), ('Yesno', 19), ('Namespace_detect/data', 19), ('Information', 9),
+('NowCommons', 3), ('Resize', 1), ('Namespace_detect', 1), ('PD-GermanGov', 1),
+('Nepārvietot_uz_Vikikrātuvi', 1), ('FoP-Latvia', 1), ('Ambox', 1), ('Dzēst', 1)
+, ('Center', 1), ('Pd-nezināms', 1)]
+"""

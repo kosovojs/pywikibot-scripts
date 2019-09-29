@@ -1,7 +1,7 @@
 import pywikibot, os
 #os.chdir(r'projects/cee')
 
-fileeopen = eval(open('cee-all-articles.txt','r', encoding='utf-8').read())
+fileeopen = eval(open('cee2dfgfdfgdfgdfgdgdfgd-2-final.txt','r', encoding='utf-8').read())
 
 myc = {}
 

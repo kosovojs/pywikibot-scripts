@@ -12,6 +12,11 @@ url2= requests.get(url)
 top250_source = url2.text
 soup_object = BeautifulSoup(top250_source, "html.parser")
 
+
+headers = {
+    'User-Agent': 'w:Edgars2007, Toolforge (toolname: edgars)'
+}
+
 #######################################################################################
 
 ###Helper functions
@@ -66,7 +71,7 @@ def oneBatch(titles,mydict):
 	query2 = urllib.parse.quote(QUERY)
 	
 	url = "https://query.wikidata.org/bigdata/namespace/wdq/sparql?query={}&format=json".format(query2)
-	url2= requests.get(url)
+	url2= requests.get(url, headers=headers)
 	url2.encoding = 'utf-8'
 	
 	json_data = json.loads(url2.text)

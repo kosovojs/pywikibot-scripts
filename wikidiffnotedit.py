@@ -46,7 +46,7 @@ def notifyMe(newtext):
 	talkpage=pywikibot.Page(pywikibot.Site('lv', 'wikipedia'),"User talk:EdgarsBot")
 	text=talkpage.get()
 	talkpage.text = newtext
-	#talkpage.save(summary='Bot: Notice of potential markup breaking', botflag=False, minor=False)
+	talkpage.save(summary='Bot: Notice of potential markup breaking', botflag=False, minor=False)
 #
 
 def notify(user,diffid,title,reason,debug):
@@ -109,7 +109,7 @@ def notify(user,diffid,title,reason,debug):
 	#talkpage.put_async(newtext,"Bot: Notice of potential markup breaking",minorEdit=False,callback=notenotified, botflag=False)
 	
 	if diffid in text:
-		notifyMe(newtext)
+		#notifyMe(newtext)
 		return 0
 	
 	talkpage.text = newtext

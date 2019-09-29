@@ -127,7 +127,7 @@ def create_redirect(thispage,redirecttitle):
 #
 def lvwikistuff(articleLV,articleEN):
 	page = pywikibot.Page(lvsite,articleLV)
-	create_redirect(articleLV,articleEN)
+	#create_redirect(articleLV,articleEN)
 	pagetext = page.get()
 	
 	wikicode = mwparserfromhell.parse(pagetext)
@@ -170,39 +170,32 @@ def run_query(query,connection = conn):
 #
 
 SQLMAIN = """select orig.page_title, (select m2.ll_title from langlinks m2 where m2.ll_from=orig.page_id and m2.ll_lang="en")
-from revision
-join page orig on orig.page_id=rev_page and orig.page_is_redirect=0 and orig.page_namespace=0
-where rev_timestamp>{} and rev_parent_id=0
-and exists (select * from templatelinks t where orig.page_id = t.tl_from AND t.tl_namespace = 10 AND t.tl_title='Filmas_infokaste')
+from page orig
+join templatelinks t on orig.page_id = t.tl_from AND t.tl_namespace = 10 AND t.tl_title='Filmas_infokaste'
+where orig.page_is_redirect=0 and orig.page_namespace=0
 """
 
-def get_last_run():
-	query = "select lastupd from logtable where job='filmBot'"
-	query_res = run_query(query,connLabs)
-	
-	return encode_if_necessary(query_res[0][0])
-#
-def set_last_run(timestamp):
-	query = "UPDATE `logtable` SET lastupd=%s where job='filmBot'"
-	
-	timeasUTC = "{0:%Y%m%d%H%M%S}".format(timestamp)
-	cursor1.execute(query, (timeasUTC))
-	connLabs.commit()
-#
-
 def get_articles():
-	lastRun = "{0:%Y%m%d%H%M%S}".format(get_last_run())
-	query_res = run_query(SQLMAIN.format(lastRun),conn)
+	query_res = run_query(SQLMAIN,conn)
 	
 	return [[encode_if_necessary(f[0]),encode_if_necessary(f[1])] for f in query_res]
 #
 def main():
 	#articles= [f for f in filmlist.split('\n') if len(f)>3]#
 	#articlelist = ['','']
+
+	wanted = 'Kin-dza-dza'
+
+	skipped = False
 	thelist = get_articles()
 	for article in thelist:
+		if article[0] != wanted and not skipped:
+			continue
+
+		skipped = True
+
 		lvwikistuff(article[0],article[1])
 	
-	set_last_run(datetime.utcnow())
+	#set_last_run(datetime.utcnow())
 		
 main()

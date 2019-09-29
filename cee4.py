@@ -4,7 +4,7 @@ from collections import OrderedDict
 
 #os.chdir(r'projects/cee')
 
-fileeopen = eval(open('cee-all-articles.txt','r', encoding='utf-8').read())
+fileeopen = eval(open('cee2dfgfdfgdfgdfgdgdfgd-2-final.txt','r', encoding='utf-8').read())
 
 prosesize = eval(open('ceeraksti-prose22.txt','r', encoding='utf-8').read())
 #['Velimirs_Kalandadze', [['dalībnieks', 'Ludis21345'], ['tēma', 'Sports'], ['valsts', 'Gruzija']]]
@@ -19,9 +19,65 @@ maintable = """{{| class="sortable wikitable"
 {}
 |}}"""
 
+"""
+{| class="wikitable sortable"
+|-
+!Dalībnieks!!Rakstu skaits
+|-
+"""
+
+"""
+latvian = [
+	('ā','a'),
+	('ē','e'),
+	('ī','i'),
+	('ū','u'),
+	('Ā','A'),
+	('Ē','E'),
+	('Ī','I'),
+	('Ū','U'),
+	##
+	('Č','Cz'),
+	('Ģ','Gz'),
+	('Ķ','Kz'),
+	('Ļ','Lz'),
+	('Ņ','Nz'),
+	('Š','Sz'),
+	('Ž','Zz')
+]
+
+def multisub(subs=trans, subject=teet):
+	"Simultaneously perform all substitutions on the subject string."
+	pattern = '|'.join('(%s)' % re.escape(p) for p, s in subs)
+	pywikibot.output(pattern)
+	substs = [s for p, s in subs]
+	pywikibot.output(substs)
+	replace = lambda m: substs[m.lastindex - 1]
+	pywikibot.output(replace)
+	return re.sub(pattern, replace, subject)
+
+def fun1(v):
+	name = v[2]
+	
+	#for repl in latvian:
+	#	name = name.replace(repl,latvian[repl])
+	name = multisub(latvian, v)
+	#pywikibot.output(name)
+	return name#
+
+def fun(v):
+	name = v[2]
+	
+	#for repl in latvian:
+	#	name = name.replace(repl,latvian[repl])
+	name = multisub(latvian, name)
+	#pywikibot.output(name)
+	return (-v[1],name)#
+"""
 def main_table(rawdata):
 	bigdict = {}
-	
+
+
 	for article in fileeopen:
 		title, data = article
 		dict = {}
@@ -33,6 +89,10 @@ def main_table(rawdata):
 			
 		bigdict.update({title:dict})
 #
+
+
+# header columns
+
 	head_conv = {
 	'tēma':'1. tēma',
 	'tēma2':'2. tēma',
@@ -117,7 +177,17 @@ def make_table(pytlist,typoeconerter):
 	#pywikibot.output(tabeltoret)
 	
 	return tabeltoret
+	
+	
+	
+"""
 
+fdfsd = collections.Counter(categories)
+
+
+for letter, count in fdfsd.most_common(100):
+    pywikibot.output('%s: %7d' % (letter, count))
+"""
 topiclist = ['tēma','tēma2','tēma3']
 countrylist = ['valsts','valsts2','valsts3']
 
@@ -149,6 +219,10 @@ for article in fileeopen:
 	if 'dalībnieks' in dict:
 		users.append(first_upper(dict['dalībnieks']))
 
+#pywikibot.output(topics)
+#pywikibot.output(countries)
+#pywikibot.output(users)
+
 topict = make_table(topics,'topic')
 countrtable = make_table(countries,'country')
 usertable = make_table(users,'user')
@@ -177,5 +251,9 @@ articletitle = 'Vikipēdija:CEE Spring 2019/Statistika'
 saglapa = pywikibot.Page(site,articletitle)
 
 saglapa.text = pagecont
+
+
+#filetowritess = open('cee2dfgdfgd-2fsdfsdfsdf-final.txt','w', encoding='utf-8')
+#filetowritess.write(str(pagecont))
 
 saglapa.save(summary='bots: atjaunināts (kopējais rakstu skaits: {})'.format(len(fileeopen)), botflag=False, minor=False)

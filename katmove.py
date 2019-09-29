@@ -1,4 +1,4 @@
-import pywikibot, sys
+import pywikibot
 from scripts.category import CategoryMoveRobot
 import toolforge
 

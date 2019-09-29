@@ -46,7 +46,7 @@ def purge_items(titles):
 SQLMAIN = """select rc_title
 from recentchanges rc
 join page p on p.page_id=rc.rc_cur_id and p.page_is_redirect=0
-where rc_type in (1) and rc_namespace=0 and rc_timestamp>20190101000000
+where rc_type in (1) and rc_namespace=0 and rc_timestamp>{}
 """
 
 def get_last_run():

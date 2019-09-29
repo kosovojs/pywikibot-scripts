@@ -1,4 +1,4 @@
-import pywikibot, re, os, requests, sys
+import pywikibot, re, os, requests
 import toolforge
 from datetime import date, datetime, timedelta, timezone
 from pytz import timezone
@@ -45,6 +45,17 @@ file = run_query('select count(*) from page  where page_is_redirect=0 and page_n
 file = encode_if_necessary(file[0][0])
 #http://pymysql.readthedocs.io/en/latest/user/examples.html
 
+def run_upd(query):
+	#query = query.encode('utf-8')
+	#print(query)
+	try:
+		#https://askubuntu.com/questions/1026770/can-not-insert-data-mysql-using-python-with-pymysql
+		cursor = conn.cursor()
+		cursor.execute(query)
+		conn2.commit()
+	except KeyboardInterrupt:
+		sys.exit()
+#
 cursor = conn.cursor()
 
 localtime2 = utc_to_local(datetime.utcnow())

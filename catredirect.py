@@ -1,4 +1,4 @@
-import pywikibot, re, sys
+import pywikibot, re
 from customFuncs import get_quarry
 import toolforge
 

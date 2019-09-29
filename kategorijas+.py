@@ -1,4 +1,4 @@
-import pywikibot, re, os, sys
+import pywikibot, re, os
 import toolforge
 from nobots import deny_bots
 

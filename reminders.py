@@ -1,5 +1,5 @@
 import pywikibot
-import toolforge, sys
+import toolforge
 import pytz, datetime
 
 site = pywikibot.Site("lv", "wikipedia")
@@ -39,6 +39,40 @@ def run_upd(query):
 		
 #
 data = run_query('select id, page, comment, page_notif, ping_user from main where archive is NULL and completed is NULL and (notif_time is NULL or "{}">notif_time)'.format(dateforq1))
+
+sqldata = {
+	"query": "select page, comment, page_notif, ping_user\r\nfrom main\r\nwhere archive is NULL and completed is NULL and\r\n\t(notif_time is NULL or now()>notif_time)",
+	"rows":
+	[
+		{
+			"page": "Martins Dukurs",
+			"comment": "komentārs",
+			"page_notif": "thepage",
+			"ping_user": "Edgars2007"
+		},
+		{
+			"page": "",
+			"comment": "",
+			"page_notif": "notifpage",
+			"ping_user": "Edgars2007"
+		},
+		{
+			"page": "fsdfsdf",
+			"comment": "",
+			"page_notif": "thepage",
+			"ping_user": "Edgars2007"
+		}
+	]
+}
+
+'''
+  <option value="notifpage">Īpaša lapa paziņojumiem</option>
+  <option value="thepage">Pati lapa (tas saprotu iemeslu dēļ nav iespējams rakstu vārdtelpā)</option>
+  <option value="talk">Lapas diskusija</option>
+  <option value="usertalk">Dalībnieka diskusiju lapa</option>
+'''
+
+#data = sqldata['rows']
 
 def put_data(id,page,user,comm,page_comm=''):
 	pagesave = pywikibot.Page(site,page)

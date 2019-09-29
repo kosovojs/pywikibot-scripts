@@ -25,9 +25,10 @@ def run_query(query):
 	
 	return rows
 #
-SQL_main = """select img_name, img_user_text, img_timestamp
+SQL_main = """select img_name, actor_name as img_user_text, img_timestamp
 from image
 join page on img_name=page_title and page_namespace=6
+join actor on img_actor=actor_id
 where not exists (select *
                  from templatelinks
                   WHERE tl_namespace = 10 and tl_from_namespace=6

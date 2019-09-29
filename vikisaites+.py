@@ -1,4 +1,4 @@
-import re, pywikibot, sys
+import re, pywikibot
 import toolforge
 
 site = pywikibot.Site('lv', "wikipedia")

@@ -7,7 +7,7 @@ from datetime import datetime
 #os.chdir(r'projects/treisijs2')
 
 conn = toolforge.connect('wikidatawiki_p','analytics')
-lvwiki = pywikibot.Site("lv", "wikipedia")
+lvwiki = pywikibot.Site("et", "wikipedia")
 site = pywikibot.Site("wikidata", "wikidata")
 site.login()
 
@@ -25,7 +25,7 @@ HAVING COUNT(ips_item_id) > 48
 AND ips_item_id NOT IN
 (SELECT ips_item_id
 FROM wb_items_per_site
-WHERE ips_site_id='lvwiki')
+WHERE ips_site_id='etwiki')
 ORDER BY COUNT(ips_item_id) DESC;"""
 
 def encode_if_necessary(b):
@@ -55,7 +55,7 @@ def sql_big_query():
 	for one in quaryrun:
 		quaryrun1.append([encode_if_necessary(b) for b in one])
 	
-	filsess1 = open('treisijs-big-query12121212.txt','w', encoding='utf-8')
+	filsess1 = open('treisijs-big-query12121212-etwiki.txt','w', encoding='utf-8')
 	filsess1.write(str(quaryrun1))
 	
 	return quaryrun1
@@ -71,7 +71,7 @@ def getAllWikis():
 	return set(wikipediaList)
 
 def getAllCurrentWikidataItemsInWikipedia():
-	conn_lvwiki = toolforge.connect('lvwiki_p','analytics')
+	conn_lvwiki = toolforge.connect('etwiki_p','analytics')
 
 	currWDitemsQuery = run_query("select pp_value from page_props where pp_propname='wikibase_item'",conn_lvwiki)
 	currWDitems = [int(encode_if_necessary(b[0])[1:]) for b in currWDitemsQuery]
@@ -484,6 +484,7 @@ def main():
 	
 	
 	sqlinputdata = sql_big_query()#eval(open('treisijs-big-query12121212.txt','r', encoding='utf-8').read())#sql_big_query()
+	'''
 	wditemsforapi = pirma_apstrade(sqlinputdata)
 	
 	#wditemsforapi = eval(open('quarry-19261-fsfsuntitled-run182282.txt','r', encoding='utf-8').read())
@@ -501,6 +502,7 @@ def main():
 	#save_wiki('Dalībnieks:Edgars2007/51++',important)
 	
 	year_page(sqlinputdata)
+	'''
 #
 #
 main()

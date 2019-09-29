@@ -8,21 +8,17 @@ from pywikibot import xmlreader
 from pywikibot import textlib
 from bz2 import BZ2File
 from collections import Counter
-from checkDump import getLastFile, setLastDump
 
-conn = toolforge.connect('lvwiki_p')
-site = pywikibot.Site("lv", "wikipedia")
+conn = toolforge.connect('etwiki_p')
+site = pywikibot.Site("et", "wikipedia")
 
 #xmlfile = 'ltgwiki-20160901-pages-articles.xml'
 #paths = '/public/dumps/public/lvwiki/20180901/lvwiki-20180901-pages-articles.xml.bz2'
 
 #os.chdir(r'projects/dumps')
 
-def getLastFile1():
-	return getLastFile()
-
 def first_part(fileToParse):
-	file = open("vajadzigie-raksti-lv-part1.txt", "w", encoding='utf-8')
+	file = open("vajadzigie-raksti-et-part1.txt", "w", encoding='utf-8')
 	num = 0
 	kopejaissaraksts = []
 	regexpat = "\[\[([^\|\]#]+)"
@@ -82,7 +78,7 @@ def second_part(data):
 	
 	fsdfd = []
 	
-	badheads = re.compile('^:?(file|category|kategorija|attēls|wp):', re.I)
+	badheads = re.compile('^:?(file|category|image|kategooria|fail|wp):', re.I)
 
 	print('here1fsdfsdsfsdfsdfsd')
 	for value, count in file.most_common():
@@ -103,7 +99,7 @@ def second_part(data):
 	print('here4')
 	#pywikibot.output(dsfsdsd)
 
-	file2 = open("vajadzigie-raksti-lv-part2.txt", "w", encoding='utf-8')
+	file2 = open("vajadzigie-raksti-et-part2.txt", "w", encoding='utf-8')
 	file2.write(str(dsfsdsd))
 	
 	return dsfsdsd
@@ -131,14 +127,14 @@ def makeDateReadable(inputstring):
 	return mockedUp
 
 def part_three(init,second,timestamp):
-	file2 = open("links-lv-out2-red------0.txt", "w", encoding='utf-8')
-	file21 = open("links-lv-out2-red------1.txt", "w", encoding='utf-8')
+	file2 = open("links-et-out2-red------0.txt", "w", encoding='utf-8')
+	file21 = open("links-et-out2-red------1.txt", "w", encoding='utf-8')
 	fdgfg = init.most_common()
 	
 	readabledata = makeDateReadable(timestamp)
 
 	fdfd = {}
-	badheads = re.compile('^:?(file|category|image|kategorija|attēls|d):', re.I)
+	badheads = re.compile('^:?(file|category|image|kategooria|fail|d):', re.I)
 	for value, count in fdgfg:
 		fdfd.update({value:count})
 
@@ -180,56 +176,36 @@ def part_three(init,second,timestamp):
 	outputsssghfg = ['* [['+x+']] — '+str(y) for x, y in sorted_x if not re.search(badheads,x)]
 	outputsssghfgsfsd = ['|[['+x+']]' for x, y in sorted_x if not re.search(badheads,x)]
 	
-	dsfsdf = """Šajā sarakstā parādās raksti, uz kuriem ir visvairāk vikisaišu Vikipēdijas rakstu vārdtelpas rakstu vikitekstā. Saraksts atjaunināts [https://dumps.wikimedia.org/lvwiki/{}/ {}].
+	dsfsdf = """Updated on {}.
 
-__TOC__
-
-== Saraksts ==
+== List ==
 {{{{div col|3}}}}
-""".format(timestamp,readabledata)
+""".format(timestamp)
 
 	endf = """
-{{div col end}}
-
-== Skatīt arī ==
-* [[/Vecā versija|Saraksta vecā versija]]
-* [[/Visas sarkanās saites|Visas sarkanās saites]]
-
-[[Kategorija:Vikipēdija]]"""
-
-	tofile =  '{{#invoke:list|horizontal|{{#invoke:random|list|limit=10|sep=dot\n' + "\n".join(outputsssghfgsfsd[:1000]) + """}}|{{Vajadzīgie Latvijas ciemu raksti|1}}}}<noinclude>
-{{dokumentācija}}
-
-[[Kategorija:Vikipēdijas veidnes]]</noinclude>"""
+{{div col end}}"""
 
 
 	tofile2 = dsfsdf + "\n".join(outputsssghfg[:300000]) + endf
 
-	file2.write(str(tofile))
-	
-	page = pywikibot.Page(site,"Vikipēdija:Vajadzīgie raksti")
+	page = pywikibot.Page(site,"Kasutaja:Edgars2007/Wanted redlinks")
 	page.text = tofile2
-	page.save(comment="Bots: atjaunināts", botflag=False, minor=False)
+	page.save(comment="upd", botflag=False, minor=False)
 	
 	file21.write(str(tofile2))
-	
-	page = pywikibot.Page(site,"Veidne:Vajadzīgie raksti")
-	page.text = tofile
-	page.save(comment="Bots: atjaunināts", botflag=False, minor=False)
 #
 def main():
-	lastdata = getLastFile1()
-	
-	if not lastdata: return 0
-	
-	filelink = lastdata['path']
-	dateStr = lastdata['date']
+	filelink = '/public/dumps/public/etwiki/20190920/etwiki-20190920-pages-articles.xml.bz2'
+	dateStr = '20190920'
 	
 	initial = first_part(filelink)
-	#initial = eval(open("vajadzigie-raksti-lv-part1.txt", "r", encoding='utf-8').read())
+	#initial = eval(open("vajadzigie-raksti-et-part1.txt", "r", encoding='utf-8').read())
 	from_seond = second_part(initial)
 	part_three(initial,from_seond,dateStr)
-	
-	setLastDump(str(dateStr))
 #
-main()
+#main()
+
+""" 
+quarrydata = get_quarry()
+file2 = open("etwiki_raksti.txt", "w", encoding='utf-8')
+file2.write(str(quarrydata)) """
