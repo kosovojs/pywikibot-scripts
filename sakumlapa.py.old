@@ -9,9 +9,7 @@ import operator
 
 botflag = False
 
-#https://phabricator.wikimedia.org/T67196
-#https://phabricator.wikimedia.org/T71283
-site = pywikibot.Site("lv", "wikipedia", user='Edgars2007')
+site = pywikibot.Site("lv", "wikipedia")
 
 #day1 = open("18dat.json", "r", encoding='utf-8').read()
 #day2 = open("17dat.json", "r", encoding='utf-8').read()
@@ -40,8 +38,6 @@ def getdata():
 		day = daytoprint.strftime("%Y/%m/%d")
 		urltoopen = 'https://wikimedia.org/api/rest_v1/metrics/pageviews/top/lv.wikipedia.org/all-access/'+day
 		res = requests.get(urltoopen).json()
-		if 'title' in res and res['title'] == 'Not found.':
-			continue
 		files.append(res)
 		
 		#print(now)
@@ -106,7 +102,7 @@ newdict = dict(Counter(dict1)+Counter(dict2))
 
 sorted_x = sorted(newdict.items(), key=operator.itemgetter(1), reverse=True)#pēc tam sakārtot alfabēta sercībā
 
-badtitles = ['Portāls:', 'Portāls:', 'Attēls:', 'File:', 'Veidnes diskusija:', 'Template talk:', 'Modulis:', 'Module:', 'Gadget:', 'Gadget:', 'MediaWiki:', 'MediaWiki:', 'Media:', 'Media:', 'Portāla diskusija:', 'Portāla diskusija:', 'Gadget talk:', 'Gadget talk:', 'Education Program talk:', 'Education Program talk:', 'Attēla diskusija:', 'File talk:', 'Palīdzība:', 'Help:', 'Education Program:', 'Education Program:', 'MediaWiki diskusija:', 'MediaWiki talk:', 'Gadget definition:', 'Gadget definition:', 'Special:', 'Special:', 'Vikipēdija:', 'Project:', 'Vikiprojekta diskusija:', 'Vikiprojekta diskusija:', 'Vikiprojekts:', 'Vikiprojekts:', 'Moduļa diskusija:', 'Module talk:', 'Veidne:', 'Template:', 'Dalībnieks:', 'User:', 'Diskusija:', 'Talk:', 'Kategorija:', 'Category:', 'Kategorijas diskusija:', 'Category talk:', 'Dalībnieka diskusija:', 'User talk:', 'Tēma:', 'Topic:', 'Gadget definition talk:', 'Gadget definition talk:', 'Vikipēdijas diskusija:', 'Project talk:', 'Palīdzības diskusija:', 'Help talk:', 'Dalībniece:', 'Lietotājs:', 'Dalībnieces diskusija:', 'Lietotāja diskusija:', 'VP:', 'WP:', 'Wikipedia:', 'Image:', 'Image talk:']#['Special:','Vikipēdija:','Palīdzība:','Vikiprojekts:','Kategorija:','Attēls:']
+badtitles = ['Special:','Vikipēdija:','Palīdzība:','Vikiprojekts:','Kategorija:','Attēls:']
 excluding = configuration['config']['exclude']#['Sākumlapa']
 #excluding = excluding.append('xxs')
 
@@ -166,7 +162,7 @@ def createSummarytable(data):
 	
 	report_pageE = pywikibot.Page(site,'Veidne:Skatītākie raksti Vikipēdijā/Statistika')
 	report_pageE.text = outputtext
-	report_pageE.save(summary='bots: atjaunināts', botflag=botflag, minor=False)
+	report_pageE.save(summary='bots: atjaunināts', botflag=botflag, minor=False, as_group='sysop')
 
 pagetosave = pywikibot.Page(site,'Veidne:Skatītākie raksti Vikipēdijā')
 
@@ -178,6 +174,6 @@ description2 = "]]|\n[[".join(toMain)
 description = "{{hlist|Pagājušajā nedēļā skatītākais:<br />[[" + description2 + "]]}}<noinclude>\n{{dokumentācija}}</noinclude>"
 
 pagetosave.text = description
-pagetosave.save(summary='bots: atjaunināts', botflag=botflag, minor=False)
+pagetosave.save(summary='bots: atjaunināts', botflag=botflag, minor=False, as_group='sysop')
 
 createSummarytable(usingdata)

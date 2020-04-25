@@ -2,8 +2,8 @@ import pywikibot, datetime
 
 from dyk2 import main
 
-site = pywikibot.Site("lv", "wikipedia")
-site.login(sysop=True)
+site = pywikibot.Site("lv", "wikipedia", user='Edgars2007')
+#site.login(sysop=True)
 site.get_tokens('edit')
 
 def doAPI(datestr):

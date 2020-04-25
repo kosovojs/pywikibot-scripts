@@ -14,6 +14,7 @@ ignore=["Sat-IP",]
 sys.stdout.flush()
 semiauto=False
 
+null = ''
 
 
 def geteditwarning(page):

@@ -8,7 +8,7 @@ lvsite = pywikibot.Site("lv", "wikipedia")
 conn = toolforge.connect('lvwiki_p')
 
 SQL = """Select page_title
-from page where page_namespace=0"""# and page_is_redirect=0
+from page where page_namespace=0 and page_is_redirect=0"""#
 
 
 def encode_if_necessary(b):

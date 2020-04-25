@@ -5,7 +5,7 @@ lastday =  yesterday.strftime('%Y/%m/%d')
 
 #os.chdir(r'projects/lv')
 
-site = pywikibot.Site("lv", "wikipedia")
+LANG_FOR = 'uk'
 
 def chunks(l, n):
 	"""Yield successive n-sized chunks from l."""
@@ -70,7 +70,7 @@ def doSQL(tlistFor,language):
 		#print(groupfd)
 		groupfd += 1
 		group = [i.replace("'", "\\'").replace(' ','_') for i in group]
-		query = "select p.page_title as page, count(l.ll_lang) from langlinks l join page p on p.page_id=l.ll_from where p.page_title in ('" + "','".join(group) + "') and p.page_namespace=0 and not exists (select * from langlinks m where l.ll_from=m.ll_from and m.ll_lang=\"lv\") group by l.ll_from;"
+		query = "select p.page_title as page, count(l.ll_lang) from langlinks l join page p on p.page_id=l.ll_from where p.page_title in ('" + "','".join(group) + "') and p.page_namespace=0 and not exists (select * from langlinks m where l.ll_from=m.ll_from and m.ll_lang=\""+LANG_FOR+"\") group by l.ll_from;"
 		query = query.encode('utf-8')
 		#print(query)
 		try:
@@ -143,7 +143,7 @@ def get_iwlinks(thelist,lang):
 			doWeNeed = True
 			
 			for iw in iws:
-				if iw['lang']=='lv':
+				if iw['lang']==LANG_FOR:
 					doWeNeed = False
 					break
 			
@@ -186,7 +186,7 @@ def one_language(language):
 
 
 def main():
-	langs = ['en','de','fr','ru','uk','pl','lt','et']
+	langs = ['en','de','fr','ru','be','pl','lt','et']
 	
 	forwiki = []
 	
@@ -197,7 +197,7 @@ def main():
 	
 	
 	site = pywikibot.Site('lv','wikipedia')
-	page = pywikibot.Page(site,'User:Edgars2007/Missing popular')
+	page = pywikibot.Page(site,'User:Edgars2007/Missing popular2')
 	page.text = textFor
 	page.save(comment='Bots: atjaunināts', botflag=False, minor=False)
 #

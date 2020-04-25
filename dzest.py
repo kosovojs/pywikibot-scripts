@@ -1,6 +1,5 @@
-import pywikibot, re, os, requests
+import pywikibot, re, os, requests, json
 from datetime import date, datetime, timedelta
-from customFuncs import basic_petscan
 from pywikibot import textlib
 
 site = pywikibot.Site("lv", "wikipedia")
@@ -121,10 +120,29 @@ def makeTable(data):
 	
 	#with open("dfsdfsdfsdf.txt", "w", encoding='utf-8') as fileS:
 	#	fileS.write(tosave+'\n\n\n\n'+str(apid))
+
+def getAllPages():
+	params = {
+		"action": "query",
+		"format": "json",
+		"list": "categorymembers",
+		"utf8": 1,
+		"formatversion": "2",
+		"cmtitle": "Kategorija:Dzēšanai izvirzītās lapas",
+		"cmprop": "title",
+		"cmlimit": "max"
+	}
+	wikipedia = 'lv'
 	
+	r = requests.get('https://{}.wikipedia.org/w/api.php?'.format(wikipedia),params = params)
+	r.encoding = 'utf-8'
+	json_data = json.loads(r.text)['query']['categorymembers']
+	json_data = [f['title'].replace(' ','_') for f in json_data]
+	return json_data
+
 	
 def main():
-	listarticles = basic_petscan('6538079')
+	listarticles = getAllPages()#'6538079'
 	listarticles = [f for f in listarticles]
 	
 	sdf = []

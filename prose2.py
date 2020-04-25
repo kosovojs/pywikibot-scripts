@@ -63,7 +63,7 @@ def main():
 	fileop = eval(open('cee2dfgfdfgdfgdfgdgdfgd-2-final.txt', 'r', encoding='utf-8').read())#fileop = eval(open('ceeraksti-prose.txt', 'r', encoding='utf-8').read())
 	fileop2 = open('ceeraksti-prose2.txt', 'w', encoding='utf-8')
 	
-	alreadyhave = eval(open('ceeraksti-prose22.txt', 'r', encoding='utf-8').read())
+	alreadyhave = {}#eval(open('ceeraksti-prose22.txt', 'r', encoding='utf-8').read())
 	
 	
 	fileop22 = open('ceeraksti-prose22.txt', 'w', encoding='utf-8')

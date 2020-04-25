@@ -19,7 +19,7 @@ summarytext = "Bots: faktu pievienošana Sākumlapai"
 
 #file = open("dz-vieta-hokejisti.txt", "w", encoding='utf-8')
 
-site = pywikibot.Site("lv", "wikipedia")
+site = pywikibot.Site("lv", "wikipedia", user='Edgars2007')
 
 def formatImage(group1, group2, group3):
 	group3 = group3 or ''
@@ -151,8 +151,8 @@ def main():
 	#pywikibot.showDiff(ieteikumuText, ieteikumiNEW)
 	#pywikibot.showDiff(sagataveText, sagataveNEW)
 	
-	saglapa.save(summary=summarytext, botflag=False, minor=False, as_group='sysop')
-	ietlapa.save(summary=summarytext, botflag=False, minor=False, as_group='sysop')
+	saglapa.save(summary=summarytext, botflag=False, minor=False)
+	ietlapa.save(summary=summarytext, botflag=False, minor=False)
 	
 	return 1
 	

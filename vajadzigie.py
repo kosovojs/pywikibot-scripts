@@ -197,7 +197,7 @@ __TOC__
 
 [[Kategorija:Vikipēdija]]"""
 
-	tofile =  '{{#invoke:list|horizontal|{{#invoke:random|list|limit=10|sep=dot\n' + "\n".join(outputsssghfgsfsd[:1000]) + """}}|{{Vajadzīgie Latvijas ciemu raksti|1}}}}<noinclude>
+	tofile =  '{{#invoke:list|horizontal|{{#invoke:random|list|limit=10|sep=dot\n' + "\n".join(outputsssghfgsfsd[:1000]) + """}}}}<noinclude>
 {{dokumentācija}}
 
 [[Kategorija:Vikipēdijas veidnes]]</noinclude>"""

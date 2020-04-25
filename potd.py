@@ -11,7 +11,7 @@ botflag = False
 
 daycounttoinclude = 8#cik dienām ģenerēt aprakstu
 
-lvsite = pywikibot.Site("lv", "wikipedia")
+lvsite = pywikibot.Site("lv", "wikipedia", user='Edgars2007')
 commons = pywikibot.Site("commons", "commons")
 
 def getdata():
@@ -49,7 +49,7 @@ def main():
 
 	pagetosave = pywikibot.Page(lvsite,'Veidne:Commons dienas bilde/Dati')
 	pagetosave.text = output
-	pagetosave.save(summary='bots: atjaunināts', botflag=botflag, minor=False, as_group='sysop')
+	pagetosave.save(summary='bots: atjaunināts', botflag=botflag, minor=False)#, as_group='sysop'
 	
 	
 if __name__ == "__main__":
