@@ -1,6 +1,17 @@
 # -*- coding: utf-8 -*-
 import cgi, re
 MISMATCH_DISTANCE=100
+
+escape_table = {
+	"[": "&#91;",
+	"]": "&#93;",
+	"|": "&#124;",
+	"{": "&#123;",
+	"}": "&#125;"
+}
+
+#print(str(ord('|')))
+
 def getmismatches(text):
 	rs,ss,cs,ns,ae=[],[],[],[],[]
 	for i in range(len(text)):
@@ -32,13 +43,12 @@ def getmismatches(text):
 		mismatches,ret,cur,i,highlighted,started=_getnextmismatch(text,mismatches,ret,cur,i,highlighted,started)
 	#
 	#if ret.startswith(['[[','{{']):
-	
-	if ret.endswith(('[[','{{')):
-		ret = re.sub(r'[\[\{]{2}$',r'',ret)
-		
-	if ret.startswith(('}}',']]')):
-		ret = re.sub(r'^[\]\}]{2}',r'',ret)
-		
+
+	for repl in escape_table:
+		ret = ret.replace(repl, escape_table[repl])
+
+	#ret = cgi.escape( ret )
+
 	return ret or "None"
 
 pre='<span style="color:red;font-weight:bold;">'

@@ -255,7 +255,7 @@ jsoninput = [
 	#{'group':'other','name':'Geoobjekti','template':'Геокар','lang':conn_ru},
 	#{'group':'other','name':'Reliģiskas ēkas','template':'Культовое сооружение','lang':conn_ru},
 	#{'group':'other','name':'Apskates vietas','template':'Достопримечательность','lang':conn_ru},
-	{'group':'other','name':'Stokholma','template':None, 'portalFr':'Stockholm','lang':conn_fr},
+	{'group':'other','name':'BLR','template':None, 'portalFr':'Biélorussie','lang':conn_fr},
 ]
 
 def main():

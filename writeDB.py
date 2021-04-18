@@ -4,7 +4,6 @@ import sqlite3 as lite
 import sys
 import re, os, sys, pywikibot, toolforge
 
-
 connLabs = toolforge.connect_tools('s53143__meta_p')
 cursor1 = connLabs.cursor()
 

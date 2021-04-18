@@ -1,183 +1,183 @@
 ﻿#!/usr/bin/env python
 # -*- coding: utf-8 -*-
+from pywikibot import page
 import requests
 from datetime import date, datetime, timedelta
 import pywikibot
 import json
 from collections import Counter
 import operator
+import urllib.parse
 
 botflag = False
 
-#https://phabricator.wikimedia.org/T67196
-#https://phabricator.wikimedia.org/T71283
-site = pywikibot.Site("lv", "wikipedia", user='Edgars2007')
+headers = {
+	'User-Agent': 'w:lv:Veidne:Skatītākie raksti Vikipēdijā'.encode('utf8')
+}
 
-#day1 = open("18dat.json", "r", encoding='utf-8').read()
-#day2 = open("17dat.json", "r", encoding='utf-8').read()
+lvwiki_namespaces = tuple(['Portāls:', 'Portāls:', 'Attēls:', 'File:', 'Veidnes diskusija:', 'Template talk:', 'Modulis:', 'Module:', 'Gadget:', 'Gadget:', 'MediaWiki:', 'MediaWiki:', 'Media:', 'Media:', 'Portāla diskusija:', 'Portāla diskusija:', 'Gadget talk:', 'Gadget talk:', 'Education Program talk:', 'Education Program talk:', 'Attēla diskusija:', 'File talk:', 'Palīdzība:', 'Help:', 'Education Program:', 'Education Program:', 'MediaWiki diskusija:', 'MediaWiki talk:', 'Gadget definition:', 'Gadget definition:', 'Special:', 'Special:', 'Vikipēdija:', 'Project:', 'Vikiprojekta diskusija:', 'Vikiprojekta diskusija:', 'Vikiprojekts:', 'Vikiprojekts:', 'Moduļa diskusija:', 'Module talk:', 'Veidne:', 'Template:', 'Dalībnieks:', 'User:', 'Diskusija:', 'Talk:', 'Kategorija:', 'Category:', 'Kategorijas diskusija:', 'Category talk:', 'Dalībnieka diskusija:', 'User talk:', 'Tēma:', 'Topic:', 'Gadget definition talk:', 'Gadget definition talk:', 'Vikipēdijas diskusija:', 'Project talk:', 'Palīdzības diskusija:', 'Help talk:', 'Dalībniece:', 'Lietotājs:', 'Dalībnieces diskusija:', 'Lietotāja diskusija:', 'VP:', 'WP:', 'Wikipedia:', 'Image:', 'Image talk:'])
 
-configuration = pywikibot.Page(site,'Dalībnieks:Edgars2007/Skatītākie raksti/configuration.json')
-configuration = configuration.get()
-configuration = eval(configuration)
+site = pywikibot.Site("lv", "wikipedia")
 
-#configuration = {"config":{"articlecount":10,"exclude":['Sākumlapa','Latvija']}}
+def get_viewcount(pageview_data):
+	if 'items' not in pageview_data:
+		return 0
 
-#data1 = json.loads(day1)
-#data2 = json.loads(day2)
+	return sum([day['views'] for day in pageview_data['items']])
 
-#[data1,data2]
+def make_view_link(article):
+	return "https://pageviews.toolforge.org/?project=lv.wikipedia.org&platform=desktop&agent=user&redirects=0&range=latest-20&pages={}".format(urllib.parse.quote(article))
 
-#https://wikimedia.org/api/rest_v1/metrics/pageviews/top/lv.wikipedia.org/all-access/2016/08/02
+def merge_pageview_date(data):
+	summary_data = {}
+	for day_data in data:
+		dict1 = {article1['article']: article1['views'] for article1 in day_data['items'][0]['articles']}
+		summary_data = dict(Counter(dict1)+Counter(summary_data))
 
-def getdata():
-	files = []
-	fisrtday = datetime.now()#datetime(2013, 3, 11)
-	
-	daycounttoinclude = int(configuration['config']['daycount'])
+	sorted_data = sorted(summary_data.items(), key=operator.itemgetter(1), reverse=True)
 
-	for daySUB in range(daycounttoinclude):
-		daytoprint = (fisrtday - timedelta(days=1) - timedelta(days=daySUB)).date()
-		day = daytoprint.strftime("%Y/%m/%d")
-		urltoopen = 'https://wikimedia.org/api/rest_v1/metrics/pageviews/top/lv.wikipedia.org/all-access/'+day
-		res = requests.get(urltoopen).json()
-		if 'title' in res and res['title'] == 'Not found.':
-			continue
-		files.append(res)
-		
-		#print(now)
-		
-	return files
-
-def datesToSub():
-	files2 = []
-	fisrtday = datetime.now()#datetime(2013, 3, 11)
-
-	for daySUB in range(7):
-		daytoprint = (fisrtday - timedelta(days=1) - timedelta(days=daySUB)).date()
-		day = daytoprint.strftime("%d.%m")
-		files2.append(day)
-		
-		#print(now)
-		
-	return files2[::-1]
-
-articleFILES = getdata()
-
-#conf = json.load(configuration)
-#pywikibot.output(configuration['config']['articlecount'])
-#pywikibot.output(configuration['config']['exclude'])
+	return sorted_data
 
 
-day1art = []
+class MostViewedPages:
+	configuration = {}
+	final_list = []
+	filtered_list = []
+	desktop_viewcounts = {}
+	date_objects = []
 
-newdict = {}
+	def __init__(self):
+		self.load_configuration()
 
-for file in articleFILES:
-	dict1 = {article1['article']: article1['views'] for article1 in file['items'][0]['articles']}
-	#day1art.append(dict1)
-	newdict = dict(Counter(dict1)+Counter(newdict))
-	
+	def load_configuration(self):
+		configuration = pywikibot.Page(site,'Dalībnieks:Edgars2007/Skatītākie raksti/configuration.json')
+		configuration = configuration.get()
+		configuration = json.loads(configuration)
+		self.configuration = configuration
 
-"""
-dict1 = {article1['article']: article1['views'] for article1 in data1['items'][0]['articles']}
-dict2 = {article2['article']: article2['views'] for article2 in data2['items'][0]['articles']}
+	def get_data(self):
+		files = []
+		first_date = datetime.now()
 
-for article1 in data1['items'][0]['articles']:
-	#pywikibot.output(article1)
-	article = article1['article']
-	views = article1['views']
-	#pywikibot.output(article)
-	#pywikibot.output(views)
-	dict1.update({article:views})
-	
-for article2 in data2['items'][0]['articles']:
-	#pywikibot.output(article1)
-	article = article2['article']
-	views = article2['views']
-	#pywikibot.output(article)
-	#pywikibot.output(views)
-	dict2.update({article:views})
-	
-newdict = dict(Counter(dict1)+Counter(dict2))
-"""
-#http://stackoverflow.com/questions/11290092/python-elegantly-merge-dictionaries-with-sum-of-values
-#http://stackoverflow.com/questions/10461531/merge-and-sum-of-two-dictionaries
+		day_count = int(self.configuration['config']['daycount'])
 
+		for daySUB in range(day_count):
+			date_object = (first_date - timedelta(days=1) - timedelta(days=daySUB)).date()
+			self.date_objects.append(date_object)
+			date_string = date_object.strftime("%Y/%m/%d")
+			urltoopen = 'https://wikimedia.org/api/rest_v1/metrics/pageviews/top/lv.wikipedia.org/all-access/{}'.format(date_string)
+			res = requests.get(urltoopen, headers=headers).json()
+			if 'title' in res and res['title'] == 'Not found.':
+				continue
+			files.append(res)
 
-sorted_x = sorted(newdict.items(), key=operator.itemgetter(1), reverse=True)#pēc tam sakārtot alfabēta sercībā
+		return files
 
-badtitles = ['Portāls:', 'Portāls:', 'Attēls:', 'File:', 'Veidnes diskusija:', 'Template talk:', 'Modulis:', 'Module:', 'Gadget:', 'Gadget:', 'MediaWiki:', 'MediaWiki:', 'Media:', 'Media:', 'Portāla diskusija:', 'Portāla diskusija:', 'Gadget talk:', 'Gadget talk:', 'Education Program talk:', 'Education Program talk:', 'Attēla diskusija:', 'File talk:', 'Palīdzība:', 'Help:', 'Education Program:', 'Education Program:', 'MediaWiki diskusija:', 'MediaWiki talk:', 'Gadget definition:', 'Gadget definition:', 'Special:', 'Special:', 'Vikipēdija:', 'Project:', 'Vikiprojekta diskusija:', 'Vikiprojekta diskusija:', 'Vikiprojekts:', 'Vikiprojekts:', 'Moduļa diskusija:', 'Module talk:', 'Veidne:', 'Template:', 'Dalībnieks:', 'User:', 'Diskusija:', 'Talk:', 'Kategorija:', 'Category:', 'Kategorijas diskusija:', 'Category talk:', 'Dalībnieka diskusija:', 'User talk:', 'Tēma:', 'Topic:', 'Gadget definition talk:', 'Gadget definition talk:', 'Vikipēdijas diskusija:', 'Project talk:', 'Palīdzības diskusija:', 'Help talk:', 'Dalībniece:', 'Lietotājs:', 'Dalībnieces diskusija:', 'Lietotāja diskusija:', 'VP:', 'WP:', 'Wikipedia:', 'Image:', 'Image talk:']#['Special:','Vikipēdija:','Palīdzība:','Vikiprojekts:','Kategorija:','Attēls:']
-excluding = configuration['config']['exclude']#['Sākumlapa']
-#excluding = excluding.append('xxs')
+	def filter_articles(self, data):
+		titles_to_exclude = self.configuration['config']['exclude']
 
-def checkbeforeadd(value):
-	page = pywikibot.Page(site,value)
-	
-	if page.exists() and not (page.isRedirectPage() or page.isDisambig()):
+		filtered_list = []
+
+		for entry in data:
+			title, _ = entry
+			if title in titles_to_exclude:
+				continue
+
+			if title.replace('_',' ').startswith(lvwiki_namespaces):
+				continue
+
+			filtered_list.append(entry)
+
+		self.filtered_list = filtered_list
+
+	def check_article_validity(self, article):
+		ordered_dates = self.date_objects
+		first_date = ordered_dates[-1].strftime("%Y%m%d")
+		last_date = ordered_dates[0].strftime("%Y%m%d")
+
+		platform = 'desktop'
+
+		url = "https://wikimedia.org/api/rest_v1/metrics/pageviews/per-article/lv.wikipedia.org/{}/user/{}/daily/{}/{}".format(platform, article, first_date, last_date)
+		res = requests.get(url, headers=headers).json()
+
+		viewcount_desktop = get_viewcount(res)
+
+		platform = 'all-access'
+
+		url = "https://wikimedia.org/api/rest_v1/metrics/pageviews/per-article/lv.wikipedia.org/{}/user/{}/daily/{}/{}".format(platform, article, first_date, last_date)
+		res = requests.get(url, headers=headers).json()
+
+		viewcount_all = get_viewcount(res)
+
+		desktop_percentage = round(viewcount_desktop / viewcount_all, 4)
+		self.desktop_viewcounts.update({article: desktop_percentage})
+
 		return True
-	else:
-		return False
-	
 
-def checkarticle(page):
-	results1 = [title for title in badtitles if title in page]
-	results2 = [title for title in excluding if title==page]
-	
-	if len(results1)==0 and len(results2)==0:
-		return True
-	else:
-		return False
+	def populate_final_list(self):
+		article_count_to_include = self.configuration['config']['articlecount']
+		final_list = []
+		curr_count = 0
+		for entry in self.filtered_list:
+			if curr_count == article_count_to_include:
+				break
+			article, _ = entry
 
-usingdata = [[f[0],f[1]] for f in sorted_x[:100] if checkarticle(f[0])]
+			is_valid = self.check_article_validity(article)
+			if is_valid:
+				final_list.append(entry)
+				curr_count += 1
 
-#for dddd in usingdata:
-#	pywikibot.output(dddd[0])
-#	pywikibot.output(dddd[1])
+		self.final_list = final_list
 
+	def save_template(self):
+		pagetosave = pywikibot.Page(site,'Veidne:Skatītākie raksti Vikipēdijā/Sagatave')
 
-pywikibot.output(usingdata)
-articlesCONF = configuration['config']['articlecount']
-articlesToadd = articlesCONF
+		articles = "]]|\n[[".join([f[0].replace('_',' ') for f in self.final_list])
 
-count = 0
+		description = "{{hlist|Pagājušajā nedēļā skatītākais:<br />[[" + articles + "]]}}<noinclude>\n{{dokumentācija}}</noinclude>"
 
-toMain = []
+		pagetosave.text = description
+		pagetosave.save(summary='bots: atjaunināts', botflag=botflag, minor=False)
 
-while count<articlesToadd:
-	
-	artic = usingdata[count][0]
-	#if checkbeforeadd(artic):
-	pywikibot.output(artic)
-	count +=1
-	toMain.append(artic.replace('_',' '))
+	def save_statistics(self):
+		table_header = '{|class="sortable wikitable"\n|-\n! Lapa !! Skatījumi !! Desktop skatījumi\n'
 
+		output_parts = []
 
-def createSummarytable(data):
-	outputtext = '{|class="sortable wikitable"\n|-\n! Lapa !! Skatījumi\n|-\n'
-	
-	for dddd in data:
-		outputtext = outputtext + "|-\n| [[%s]] || %d\n" % (dddd[0].replace('_',' '),dddd[1])
-		
-	outputtext = outputtext + "|}"
-	
-	addeddates = datesToSub()
-	
-	outputtext = 'Iekļautie datumi: '+', '.join(addeddates)+'.\n\n'+outputtext
-	
-	report_pageE = pywikibot.Page(site,'Veidne:Skatītākie raksti Vikipēdijā/Statistika')
-	report_pageE.text = outputtext
-	report_pageE.save(summary='bots: atjaunināts', botflag=botflag, minor=False)
+		cnt = 0
 
-pagetosave = pywikibot.Page(site,'Veidne:Skatītākie raksti Vikipēdijā')
+		article_count_to_include = self.configuration['config']['articlecount']
 
-description2 = "]]|\n[[".join(toMain)
+		for entry in self.filtered_list[:100]:
+			cnt += 1
+			desktop_views = self.desktop_viewcounts[entry[0]] if entry[0] in self.desktop_viewcounts else ""
+			border = ""
 
-#arr3 = "]]\n* [[".join(toMain)
+			if cnt == article_count_to_include+1:
+				border = 'style="border-top: 5px solid gray;"'
 
+			curr_part = "|- {}\n| [[{}]] || [{} {}] || {}".format(border, entry[0].replace('_',' '), make_view_link(entry[0]), entry[1], desktop_views)
+			output_parts.append(curr_part)
 
-description = "{{hlist|Pagājušajā nedēļā skatītākais:<br />[[" + description2 + "]]}}<noinclude>\n{{dokumentācija}}</noinclude>"
+		table = table_header + '\n'.join(output_parts) + "\n|}"
 
-pagetosave.text = description
-pagetosave.save(summary='bots: atjaunināts', botflag=botflag, minor=False)
+		addeddates = [f.strftime("%d.%m") for f in self.date_objects[::-1]]
 
-createSummarytable(usingdata)
+		outputtext = 'Iekļautie datumi: '+', '.join(addeddates)+'.\n\n'+table
+
+		report_pageE = pywikibot.Page(site,'Veidne:Skatītākie raksti Vikipēdijā/Statistika')
+		report_pageE.text = outputtext
+		report_pageE.save(summary='bots: atjaunināts', botflag=botflag, minor=False)
+
+	def handle(self):
+		page_view_data = self.get_data()
+		sorted_pageviews = merge_pageview_date(page_view_data)
+		self.filter_articles(sorted_pageviews)
+		self.populate_final_list()
+
+		self.save_template()
+		self.save_statistics()
+
+inst = MostViewedPages()
+inst.handle()

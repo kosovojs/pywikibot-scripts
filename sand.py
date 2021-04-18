@@ -30,5 +30,4 @@ def main():
 	otherSandboxes(site)
 
 if __name__ == "__main__":
-    pywikibot.handleArgs()
     main()

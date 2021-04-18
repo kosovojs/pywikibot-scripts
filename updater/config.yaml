@@ -1,0 +1,8 @@
+langs: ['lv']
+dev: false
+filename-api: data/main-api-data.txt
+main-query:
+    min-langs: 45
+    use-cache: true
+    filename: data/main-query-data.txt
+    filename-lang: data/main-query-data-{}.txt

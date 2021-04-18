@@ -7,8 +7,10 @@ site = pywikibot.Site("lv", "wikipedia", user='Edgars2007')
 site.get_tokens('edit')
 
 def doAPI(datestr):
-	r = pywikibot.data.api.Request(site=site, action="expandtemplates", format="json", 
-									text='{{Vai tu zināji/Sagatave|' + datestr + '}}', prop='wikitext').submit()
+	params = dict(action="expandtemplates", format="json", text='{{Vai tu zināji/Sagatave|' + datestr + '}}', prop='wikitext')
+	print(params)
+
+	r = pywikibot.data.api.Request(site=site, parameters=params).submit()
 	#
 	outputstr = r['expandtemplates']['wikitext']
 	return outputstr
@@ -31,5 +33,5 @@ pywikibot.output(newot)
 if newot=='':
 	#putNotif()
 	tryfsdf = main()
-	if tryfsdf==0:
-		putNotif()
+	#if tryfsdf==0:
+	#	putNotif()

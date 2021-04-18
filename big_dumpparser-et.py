@@ -47,7 +47,7 @@ title_years = 'Dalībnieks:Edgars2007/Aka/Gadu saites'#nevajag kontekstu
 
 
 def getLastFile1():
-	
+
 	return getLastFile(jobname='dumpsOther')
 
 def parse_findings(regex,pagetext,pagetitle,file,data):
@@ -60,11 +60,11 @@ def parse_findings(regex,pagetext,pagetitle,file,data):
 			sectionname = sectionname.replace('\n',' ')
 			sectionname = re.sub('\s\s*',' ',sectionname)
 			finds.append(sectionname)
-			
+
 		if len(finds)>0:
 			#file.write('* [['+pagetitle+']]: '+', '.join(finds)+'\n')
 			data.append([pagetitle,', '.join(finds)])
-			
+
 #
 def parseFile(fileToParse):
 	num = 0
@@ -74,10 +74,10 @@ def parseFile(fileToParse):
 				num += 1
 				if num % 2500 == 0:
 					print(num)
-				
+
 				pagetext = textlib.unescape(page.text)
 				pagetitle = page.title
-				
+
 				#nākošais
 				parse_findings(check_nakosais,pagetext,pagetitle,file_nakosais,mas_nakosais)
 				#isbn
@@ -95,7 +95,7 @@ def putWiki():
 
 		file_nakosais = open(r"lv-dumpscan-nakos.txt", "w", encoding='utf-8')
 		file_nakosais.write(str(mas))
-		
+
 		if len(mas)>0:
 			thetext = ["* [[{}]]: {}".format(f[0],f[1]) for f in mas]
 			page = pywikibot.Page(site,title)
@@ -105,14 +105,14 @@ def putWiki():
 def main():
 	#lastdata = getLastFile1()
 	#if not lastdata: return 0
-	
-	filelink = '/public/dumps/public/etwiki/20190801/etwiki-20190801-pages-articles.xml.bz2'
-	dateStr = '20190801'#lastdata['date']
-	
+
+	filelink = '/public/dumps/public/etwiki/20210401/etwiki-20210401-pages-articles.xml.bz2'
+	dateStr = '20210401'#lastdata['date']
+
 	parseFile(filelink)
 	putWiki()
-	
+
 	#setLastDump(str(dateStr),'dumpsOther')
-	
+
 #
 main()

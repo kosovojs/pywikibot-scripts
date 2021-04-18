@@ -18,7 +18,7 @@ join page on img_name=page_title and page_namespace=6
 where not exists (select *
                  from templatelinks
                   WHERE tl_namespace = 10 and tl_from_namespace=6
-	and tl_title in ("CC-BY-SA-3.0","Aizsargāts_logo","Self","Copyr","NA-70","Albuma_vāks","PD-nezināms","GreenZeb_attēls","CC-BY-SA-3.0_P","PD-autors","CC-BY-SA-2.5","Panoramio","GFDL","Lidingo11-foto","Ekrānuzņēmums","Filmas_plakāts","Bontrager_foto","CC-BY-SA-4.0","Laurijsfoto","6.2_pants","Grāmatas_vāks","Sedols","PD-likvidēta_prese","Trivial","Edgars2007_attēls","File_other","PD-vecs","Fairuse-audio","R_Vambuts_foto","Driver24-foto","Kikosfoto","MFrikmanis-foto","PD-Demis","Coatofarms","CC-BY-3.0","CC-BY-SA-3.0_PL","Attribution","PD","PD-padomju_prese","Non-free_with_NC","PD-ASV","Strīķis","RAntropovs_foto","Papuass-foto","PD-ASV_valdība","Pastmarka","PD-NASA","PD-Itālija","CC-BY-2.0","CC-BY-2.5","CC-BY-4.0","NOAA","Meteo","CC-BY-SA-2.0","Komikss","LU_fotoarhīvs","PD-zinātne","Rēzekne","PD-Krievija","Ivars_Veiliņš-foto","Gerb","DJ_EV-foto","NMackevičs-foto","GMV-foto","PD-Polija","CC-BY-SA-3.0_P3","CC-BY-SA-3.0_P","CC-zero")
+	and tl_title in ("CC-BY-SA-3.0","Aizsargāts_logo","Self","Copyr","NA-70","Albuma_vāks","PD-nezināms","GreenZeb_attēls","CC-BY-SA-3.0_P","PD-autors","CC-BY-SA-2.5","Panoramio","GFDL","Lidingo11-foto","Ekrānuzņēmums","Filmas_plakāts","Bontrager_foto","CC-BY-SA-4.0","Laurijsfoto","6.2_pants","Grāmatas_vāks","Sedols","PD-likvidēta_prese","Trivial","Edgars2007_attēls","File_other","PD-vecs","Fairuse-audio","R_Vambuts_foto","Driver24-foto","Kikosfoto","MFrikmanis-foto","PD-Demis","Coatofarms","CC-BY-3.0","CC-BY-SA-3.0_PL","Attribution","PD","PD-padomju_prese","Non-free_with_NC","PD-ASV","Strīķis","RAntropovs_foto","Papuass-foto","PD-ASV_valdība","Pastmarka","PD-NASA","PD-Itālija","CC-BY-2.0","CC-BY-2.5","CC-BY-4.0","NOAA","Meteo","CC-BY-SA-2.0","Komikss","LU_fotoarhīvs","PD-zinātne","Rēzekne","PD-Krievija","Ivars_Veiliņš-foto","Gerb","DJ_EV-foto","NMackevičs-foto","GMV-foto","PD-Polija","CC-BY-SA-3.0_P3","CC-BY-SA-3.0_P","CC-zero","PD-self")
 				and tl_from=page_id)"""
 
 def encode_if_necessary(b):
@@ -35,7 +35,7 @@ def run_query():
 		rows = cursor.fetchall()
 	except KeyboardInterrupt:
 		sys.exit()
-	
+
 	return rows
 #
 
@@ -58,11 +58,11 @@ for entry in file:
 		tpls = ["{{{{tl|{}}}}}".format(f.replace('_',' ')) for f in tpls if '/' not in f]
 	else:
 		tpls = ['']
-	
+
 	#todo: ja ir 'Attēla autortiesības', tad rindu iekrāsot sarkanīgu
 	row = "|-\n| [[:Attēls:{0}|{0}]] || {{{{U|{1}}}}} || {2} || {3} || {4}".format(filename.replace('_',' '),user,date,', '.join(tpls), links)
 	rows.append(row)
-	
+
 header = '{{Dalībnieks:Edgars2007/Pieprasīt datu atjaunošanu}}\nSarakstā apkopoti attēli, kam nav norādīta autortiesību licence.\n\n__TOC__\n== Saraksts ==\n{| class="sortable wikitable"\n|-\n! Attēls !! Augšupielādētājs !! Augšupielādes datums !! Izmantotās veidnes !! Saites uz attēlu'
 table = '\n'.join(rows)
 end = '|}'
@@ -85,8 +85,8 @@ page.save(comment='Bots: atjaunināts saraksts', botflag=False, minor=False)
 
 #fileS = open("atteli-nav lic.txt", "w", encoding='utf-8')
 #fileS.write(finalout)
-	
-	
+
+
 """
 tpls = [f[3].split('|') for f in file if f[3]!='']
 
@@ -97,7 +97,7 @@ fff = Counter(gdfgf)
 
 pywikibot.output(tpls)
 pywikibot.output(fff.most_common())
-#Category_handler, 
+#Category_handler,
 #
 
 [('Imbox', 22), ('Attēla_autortiesības', 21), ('Category_handler/blacklist', 19)
