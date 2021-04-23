@@ -2,7 +2,7 @@ import pywikibot
 from scripts.category import CategoryMoveRobot
 import toolforge
 
-site = pywikibot.getSite("lv", "wikipedia")
+site = pywikibot.Site("lv", "wikipedia")
 conn = toolforge.connect('lvwiki_p')
 
 SQL = """SELECT p.page_title, COUNT(cl.cl_from) AS anz
@@ -27,21 +27,21 @@ def run_query():
 		rows = cursor.fetchall()
 	except KeyboardInterrupt:
 		sys.exit()
-	
+
 	return rows
 #
 
 
 def one_cat(OLDCAT):
 	oldcatObject = pywikibot.Page(site,"Kategorija:{}".format(OLDCAT))
-	
+
 	if not oldcatObject.isRedirectPage():
 		return 0
 	#
-	
+
 	NEWCAT = oldcatObject.getRedirectTarget().title(withNamespace=False)
 	#pywikibot.output(NEWCAT)
-	
+
 	SUMMARY = 'kategorija "{}" → "{}"'.format(OLDCAT.replace('_',' '), NEWCAT.replace('_',' '))
 	q = CategoryMoveRobot(OLDCAT, NEWCAT, batch=True, comment=SUMMARY, inplace=True, delete_oldcat=False)
 	q.run()
