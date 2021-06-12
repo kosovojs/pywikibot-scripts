@@ -7,17 +7,33 @@ file = open('file_licence.txt','r', encoding='utf-8').read()
 
 site = pywikibot.Site('lv', "wikipedia")
 conn = toolforge.connect('lvwiki_p')
+connLabs = toolforge.connect_tools('s53143__meta_p')
+cursor1 = connLabs.cursor()
+
+def get_last_run():
+	query = "select lastupd from logtable where job='image_copyr'"
+	query_res = run_query(query,connLabs)
+
+	return encode_if_necessary(query_res[0][0])
+#
+def set_last_run(timestamp):
+	query = "UPDATE `logtable` SET lastupd=%s where job='image_copyr'"
+
+	timeasUTC = "{0:%Y%m%d%H%M%S}".format(timestamp)
+	cursor1.execute(query, (timeasUTC))
+	connLabs.commit()
+#
 
 def encode_if_necessary(b):
 	if type(b) is bytes:
 		return b.decode('utf8')
 	return b
 
-def run_query(query):
+def run_query(query,connection = conn):
 	#query = query.encode('utf-8')
 	#print(query)
 	try:
-		cursor = conn.cursor()
+		cursor = connection.cursor()
 		cursor.execute(query)
 		rows = cursor.fetchall()
 	except KeyboardInterrupt:
@@ -38,13 +54,9 @@ where not exists (select *
 order by img_timestamp desc"""
 #
 
-data = run_query(SQL_main.format(file))
+lastRun = "{0:%Y%m%d%H%M%S}".format(get_last_run())
+data = run_query(SQL_main.format(lastRun))
 pywikibot.output(data)
-
-if len(data)<1:
-	newtimestamp = file
-else:
-	newtimestamp = encode_if_necessary(data[0][2])
 
 for fil1e in data:
 	fil1e = [encode_if_necessary(f) for f in fil1e]
@@ -77,5 +89,4 @@ for fil1e in data:
 
 	userpage.save(comment='Bots: nav autortiesību informācijas ([[:Attēls:'+fileimage+']]). [[Dalībnieka diskusija:Edgars2007|Kļūda?]]', botflag=False, minor=False)
 #
-fileS = open('file_licence.txt','w', encoding='utf-8')
-fileS.write(newtimestamp)
+set_last_run(datetime.utcnow())

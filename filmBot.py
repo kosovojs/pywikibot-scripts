@@ -45,7 +45,7 @@ def do_upl(imgname):
 	
 	#url = 'https://upload.wikimedia.org/wikipedia/en/b/b4/Project_X_Poster.jpg'
 	
-	bot = upload.UploadRobot(url=imagePage.fileUrl(), description=desc,
+	bot = upload.UploadRobot(url=imagePage.get_file_url(), description=desc,
 								 keepFilename=True,
                                  verifyDescription=False, ignoreWarning=True,
                                  targetSite=lvsite)
