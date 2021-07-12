@@ -1,6 +1,7 @@
 import re, pywikibot, os
 import toolforge
 from customFuncs import get_quarry as quarry
+from collections import Counter
 
 site = pywikibot.Site("lv", "wikipedia")
 
@@ -30,7 +31,11 @@ where page_is_redirect=0 and page_namespace=0"""
 
 query_res = run_query(SQLMAIN,conn)
 
-data = [encode_if_necessary(f[0]) for f in query_res]
+data = [encode_if_necessary(f[0]).replace('_',' ') for f in query_res]
+
+lowercased_unique = Counter([f.lower() for f in data])
+
+dublicates = sorted([f[0] for f in lowercased_unique.items() if f[1]>1])
 
 #https://www.mediawiki.org/wiki/Manual:$wgLegalTitleChars
 stringtocheck = "\"0-9A-Za-zĀČĒĢĪĶĻŅŠŪŽāčēģīķļņšūž\. ,!%\-\(\)—:'\/+&\?№ßö"
@@ -44,7 +49,6 @@ regexr = "[^{}]".format(stringtocheck)
 tosave = []
 
 for title in data:
-	title = title.replace('_',' ')
 	if title[0] in badthings and title[-1] in badthings:
 		#print('pēdiņas sākumā+beigās')
 		tosave.append('pēdiņas sākumā+beigās')
@@ -58,6 +62,11 @@ for title in data:
 	if trt:
 		tosave.append("* [[{}]]: {}".format(title,', '.join(trt)))#([title,trt])
 #
+
+for entry in dublicates:
+	candidates = [f for f in data if f.lower() == entry]
+	if len(candidates)>0:
+		tosave.append("* {}: [[{}]]".format(entry,']], [['.join(candidates)))
 
 page = pywikibot.Page(site,"Dalībnieks:Edgars2007/Nestandarta nosaukumi")
 page.text = '\n'.join(tosave)

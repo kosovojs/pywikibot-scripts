@@ -24,7 +24,7 @@ def run_query(query):
 		rows = cursor.fetchall()
 	except KeyboardInterrupt:
 		sys.exit()
-	
+
 	return rows
 #
 SQL_main = """select p.page_title, count(l.ll_lang) as langs,
@@ -132,7 +132,8 @@ def utc_to_local(utc_dt):
 
 infoboxlist = infoboxlist[::-1]
 
-sql_insert = 'INSERT INTO `entries` (`name`, `group_name`, `jsondata`,`last_upd`) VALUES (%s, %s, %s, %s)'
+sql_insert = 'UPDATE `entries` SET jsondata=%s, last_upd=%s where group_name=%s and name=%s'
+#'INSERT INTO `entries` (`name`, `group_name`, `jsondata`,`last_upd`) VALUES (%s, %s, %s, %s)'
 
 def encode_all_items(row):
 	return [encode_if_necessary(f) for f in row]
@@ -144,24 +145,24 @@ def main():
 		begin = time.time()
 		#result_json = []
 		query_res = run_query(SQL_main.format(infobox))
-		
+
 		end = time.time()
 		timelen = end-begin
 		if timelen>30:
 			pywikibot.output('{}'.format(timelen))
-		
+
 		result_json = [encode_all_items(f) for f in query_res]
 		curr_time = utc_to_local(datetime.utcnow())
 		dateforq1 = "{0:%Y%m%d%H%M%S}".format(curr_time)
 		#print(dateforq1)
-		
+
 		#put_db(infobox,result_json,dateforq1)
-		cursor1.execute(sql_insert, (infobox.replace('Infobox_','').replace('_',' '), 'eninfobox',str(json.dumps(result_json)),dateforq1))
-		
+		cursor1.execute(sql_insert, (str(json.dumps(result_json)), dateforq1, 'eninfobox', infobox.replace('Infobox_','').replace('_',' ')))
+
 		connLabs.commit()
 	connLabs.close()
 	conn.close()
 	pywikibot.output('done')
-		
+
 #
 main()
