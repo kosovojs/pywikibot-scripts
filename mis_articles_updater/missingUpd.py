@@ -178,11 +178,11 @@ def processone(entity):
 	if 'P31' not in claims:
 		p31vals = []
 	else:
-		p31vals = [f["mainsnak"]["datavalue"]["value"]["id"] for f in claims['P31']]
+		p31vals = [f.get("mainsnak", {}).get("datavalue", {}).get("value", {}).get("id") for f in claims['P31']]
 	if 'P279' not in claims:
 		pP279vals = []
 	else:
-		pP279vals = [f["mainsnak"]["datavalue"]["value"]["id"] for f in claims['P279']]
+		pP279vals = [f.get("mainsnak", {}).get("datavalue", {}).get("value", {}).get("id") for f in claims['P279']]
 		#masivcs.update({entry:p31vals})
 	
 	#pywikibot.output(newlinks)

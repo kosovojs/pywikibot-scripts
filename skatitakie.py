@@ -11,6 +11,10 @@ from customFuncs import basic_petscan
 
 botflag = False
 
+headers = {
+	'User-Agent': 'w:lv:User:Edgars2007/Missing popular2'.encode('utf8')
+}
+
 page_to_save = 'Veidne:Aktuāls notikums sākumlapā/Skatītākie raksti'
 
 #file1323 = open("viewdata2.txt", "w", encoding='utf-8')
@@ -31,7 +35,7 @@ pagetosave = pywikibot.Page(site,'Veidne:Aktuāls notikums sākumlapā/Skatītā
 #category = pywikibot.Category(site, u'Kategorija:2018. gada ziemas olimpiskās spēles')
 #gen = pagegenerators.CategorizedPageGenerator(category, namespaces=0, recurse=2)
 
-listarticles = basic_petscan('4734309')
+listarticles = basic_petscan('19656819')
 catpages = [f['title'] for f in listarticles]
 
 #file = open("views.json", "r", encoding='utf-8')
@@ -50,7 +54,7 @@ for page23 in gen:
 	catpages.append(article23)
 '''
 exclude = [
-	
+
 ]
 
 searchstr = "FIFA_Pas"
@@ -85,9 +89,9 @@ day = str(day or yesterday.day).rjust(2, '0')
 
 url = '/'.join([endpoints['top'], project, access, year, month, day])
 
-result = requests.get(url).json()
-	
-	
+result = requests.get(url, headers=headers).json()
+
+
 for item in result['items'][0]['articles']:
 	if count>7:
 		break
@@ -95,20 +99,20 @@ for item in result['items'][0]['articles']:
 		value = str(item['article'])
 		if (searchstr in value or searchstr2 in value or value in catpages) and value not in exclude and 'Vikiprojekts:' not in value:
 			#pywikibot.output("Found 'is' in the string.")
-			
-			
-			
+
+
+
 			page = pywikibot.Page(site,value)
-			
+
 			if page.exists() and not (page.isRedirectPage() or page.isDisambig()):
 				pywikibot.output(value)
 				value = value.replace("_"," ")
 				arr.append(value)
 				count = count+1
-			
+
 #get data end
-			
-			
+
+
 description2 = "]]''|\n''[[".join(arr)
 
 for itemarticle in exclude:
@@ -138,4 +142,4 @@ pywikibot.output(description)
 pagetosave = pywikibot.Page(site,page_to_save)
 
 pagetosave.text = description
-pagetosave.save(summary='bots: atjaunināts', botflag=botflag, minor=False, as_group='sysop')
+pagetosave.save(summary='bots: atjaunināts', botflag=botflag, minor=False)#, as_group='sysop'
