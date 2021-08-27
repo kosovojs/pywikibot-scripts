@@ -19,24 +19,24 @@ def do_api_req(wikipedia,title,cont=''):
 		"rvdir": "older"
 	}
 	wikipedia = wikipedia.replace('wiki','').replace('_','-')
-	
+
 	if cont!='':
 		params.update({"rvcontinue":cont})
-		
+
 	r = requests.get('https://{}.wikipedia.org/w/api.php?'.format(wikipedia),params = params)
 	r.encoding = 'utf-8'
 	json_data = eval(r.text)
 	#pywikibot.output(json_data["continue"])
-	
+
 	return json_data
 #
 inuseregex = '{{\s*(template:|veidne:)?\s*(dzēst|delete)( attēlu)?'
 
 def get_infobox_params(pagetext):
 	tplnames = ['dzēst','delete','dzēst attēlu']
-	
+
 	infobox = {}
-	
+
 	for template, fielddict in textlib.extract_templates_and_params(pagetext, remove_disabled_parts=False, strip=True):
 		tplname = template.lower().strip().replace('_',' ')
 		if tplname in tplnames:
@@ -46,8 +46,8 @@ def get_infobox_params(pagetext):
 			#	print(len(parsed))
 			#pywikibot.output(infobox)
 			break
-	
-	
+
+
 	return infobox
 #
 def parse_one_article(title,file):
@@ -77,10 +77,10 @@ def parse_one_article(title,file):
 	date_from = neededrev['timestamp']
 	user_orig = neededrev['user']
 	commentars = neededrev['comment']
-	
+
 	pagetosave = pywikibot.Page(site,title)
 	pgtext = pagetosave.text
-	
+
 	print(date_from)
 	print(user_orig)
 	#
@@ -96,28 +96,41 @@ def parse_one_article(title,file):
 	cur_date = datetime.now()
 	start_date = datetime.strptime(date_from,'%Y-%m-%dT%H:%M:%SZ')
 	last_edit_obj = datetime.strptime(last_edit,'%Y-%m-%dT%H:%M:%SZ')
-	
+
 	return [start_date,user_orig,commentars,get_infobox_params(pgtext)]
 #.strftime('%Y-%m-%dT%H:%M:%SZ')
+
+def get_due_text(days, date):
+	if not days and not date:
+		return ''
+
+	if days and not date:
+		return days
+
+	if date and not days:
+		return date
+
+	return "{} ({})".format(days, date)
 def makeTable(data):
-	
+
 	beigas = []
 	apid = []
-	
+
 	data.sort(key=lambda x: x[0][0])
 	#
 	for one in data:
 		reald,apis = one
-		thisrow = "| {{{{page-multi|page={}|t|h|d}}}} || {} || {} || {{{{U|{}}}}} || <nowiki>{}</nowiki> || {}\n|-".format(reald[4].replace('_',' '),reald[0].strftime('%Y-%m-%d %H:%M:%S'),(datetime.now() - reald[0]).days,reald[1],reald[2],reald[3]['1'] if '1' in reald[3] else '')
+		due_text = get_due_text(reald[3].get('due'), reald[3].get('due_date'))
+		thisrow = "| {{{{page-multi|page={}|t|h|d}}}} || {} || {} || {{{{U|{}}}}} || <nowiki>{}</nowiki> || {} || {}\n|-".format(reald[4].replace('_',' '),reald[0].strftime('%Y-%m-%d %H:%M:%S'),(datetime.now() - reald[0]).days,reald[1],reald[2],reald[3]['1'] if '1' in reald[3] else '', due_text)
 		beigas.append(thisrow)
 		apid.append(apis)
 	#
-	tosave = '<div style="float:right;">{{Tnavbar|Dzēšanai izvirzītās lapas|mini=1}}</div>\nAtjaunināts: '+datetime.now().strftime('%Y-%m-%d %H:%M:%S')+'{{clear}}\n{| class="sortable wikitable"\n|-\n! Lapa || Izvirzīšanas datums || Dienu skaits || Izvirzītājs || Kopsavilkuma komentārs || Pamatojums veidnē\n|-\n'+'\n'.join(beigas)+'\n|}<noinclude>\n[[Kategorija:Vikipēdijas veidnes]]</noinclude>'
-	
+	tosave = '<div style="float:right;">{{Tnavbar|Dzēšanai izvirzītās lapas|mini=1}}</div>\nAtjaunināts: '+datetime.now().strftime('%Y-%m-%d %H:%M:%S')+'{{clear}}\n{| class="sortable wikitable"\n|-\n! Lapa || Izvirzīšanas datums || Dienu skaits || Izvirzītājs || Kopsavilkuma komentārs || Pamatojums veidnē || Termiņš\n|-\n'+'\n'.join(beigas)+'\n|}<noinclude>\n[[Kategorija:Vikipēdijas veidnes]]</noinclude>'
+
 	saglapa = pywikibot.Page(site,'Veidne:Dzēšanai izvirzītās lapas')
 	saglapa.text = tosave
 	saglapa.save(summary='upd', botflag=False, minor=False)
-	
+
 	#with open("dfsdfsdfsdf.txt", "w", encoding='utf-8') as fileS:
 	#	fileS.write(tosave+'\n\n\n\n'+str(apid))
 
@@ -133,20 +146,20 @@ def getAllPages():
 		"cmlimit": "max"
 	}
 	wikipedia = 'lv'
-	
+
 	r = requests.get('https://{}.wikipedia.org/w/api.php?'.format(wikipedia),params = params)
 	r.encoding = 'utf-8'
 	json_data = json.loads(r.text)['query']['categorymembers']
 	json_data = [f['title'].replace(' ','_') for f in json_data]
 	return json_data
 
-	
+
 def main():
 	listarticles = getAllPages()#'6538079'
 	listarticles = [f for f in listarticles]
-	
+
 	sdf = []
-	
+
 	for onearticle in listarticles:
 		if onearticle in ('Kategorija:NowCommons','Kategorija:Dzēšanai_izvirzītie_attēli','Kategorija:Db-commons','Kategorija:Dzēšanai_izvirzītās_lapas','Veidne:Dzēšanai_izvirzītās_lapas'): continue
 		apivesture = do_api_req('lvwiki',onearticle)

@@ -4,6 +4,7 @@ import urllib.parse
 import pywikibot, re
 import toolforge
 
+
 lvsite = pywikibot.Site("lv", "wikipedia")
 conn = toolforge.connect('meta_p')
 
@@ -25,7 +26,7 @@ def run_query():
 		rows = cursor.fetchall()
 	except KeyboardInterrupt:
 		sys.exit()
-	
+
 	return rows
 #
 lvwiki = run_query()#quarry('14884','1')

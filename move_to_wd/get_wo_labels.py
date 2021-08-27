@@ -1,4 +1,5 @@
 import re, os, sys, toolforge, logging
+from gather_info import get_labels_from_wikidata
 
 logging.basicConfig(filename='get_wo_labels.log', filemode='a+', level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 
@@ -58,6 +59,7 @@ def add_to_file(items):
 logging.info("Found {} items".format(len(data)))
 
 cnt = 0
+all_missing_ids = []
 
 for chunk in chunker(data, 1000):
 	cnt += 1
@@ -69,5 +71,11 @@ for chunk in chunker(data, 1000):
 	if len(diffr)>0:
 		add_to_file(diffr)
 		logging.info("Saved {} items".format(len(diffr)))
-logging.info("Finished")
+		all_missing_ids.extend(diffr)
+
+logging.info("Finished gathering data")
+logging.info("starting second phase")
+
+get_labels_from_wikidata(all_missing_ids)
+logging.info("finished second phase")
 #
