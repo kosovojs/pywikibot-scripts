@@ -9,12 +9,12 @@ from collections import OrderedDict
 
 DEBUG = False
 
-logging.basicConfig(filename='cee-2021-stats.log', filemode='a+', level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+logging.basicConfig(filename='cee-2022-stats.log', filemode='a+', level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 
 topiclist = ['tēma','tēma2','tēma3']
 countrylist = ['valsts','valsts2','valsts3']
 
-pagecontTpl = """{{{{CEE Spring 2021 navigācija}}}}
+pagecontTpl = """{{{{CEE Spring 2022 navigācija}}}}
 == Konkursā iesniegtie raksti ==
 {}
 
@@ -27,7 +27,7 @@ pagecontTpl = """{{{{CEE Spring 2021 navigācija}}}}
 == Izveidotie raksti pēc tēmas ==
 {}
 
-[[Kategorija:CEE Spring 2021|Statistika]]
+[[Kategorija:CEE Spring 2022|Statistika]]
 """
 
 
@@ -75,7 +75,7 @@ def extractDisscussionData(pagetext):
 	for template, fielddict in textlib.extract_templates_and_params(pagetext, remove_disabled_parts=False, strip=True):
 		tplname = template.lower().strip().replace('_',' ')
 
-		if tplname not in ['cee spring 2021']:
+		if tplname not in ['cee spring 2022']:
 			continue
 
 		fielditems = [[k[0],k[1]] for k in fielddict.items()]
@@ -176,7 +176,7 @@ class CEE:
 			"action": "query",
 			"format": "json",
 			"prop": "transcludedin",
-			"titles": "Veidne:CEE Spring 2021",
+			"titles": "Veidne:CEE Spring 2022",
 			"tiprop": "title|redirect",
 			"tinamespace": "1",
 			"tilimit": "max"
@@ -193,7 +193,7 @@ class CEE:
 				"action": "query",
 				"format": "json",
 				"prop": "transcludedin",
-				"titles": "Veidne:CEE Spring 2021",
+				"titles": "Veidne:CEE Spring 2022",
 				"tiprop": "title|redirect",
 				"tinamespace": "1",
 				#"tilimit": "25",
@@ -326,8 +326,8 @@ class CEEStats:
 
 		typecon = {
 			'user':'{{{{U|{}}}}}',
-			'country':'[[:Kategorija:CEE Spring 2021 raksti — {0}|{0}]]',
-			'topic':'[[:Kategorija:CEE Spring 2021 raksti — {0}|{0}]]'
+			'country':'[[:Kategorija:CEE Spring 2022 raksti — {0}|{0}]]',
+			'topic':'[[:Kategorija:CEE Spring 2022 raksti — {0}|{0}]]'
 		}
 
 		typecon2 = {
@@ -387,7 +387,7 @@ class CEEStats:
 				fileSave.write(pagecont2)
 		else:
 			site = pywikibot.Site("lv", "wikipedia")
-			articletitle = 'Vikipēdija:CEE Spring 2021/Statistika'
+			articletitle = 'Vikipēdija:CEE Spring 2022/Statistika'
 			saglapa = pywikibot.Page(site,articletitle)
 
 			saglapa.text = pagecont2

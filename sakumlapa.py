@@ -91,6 +91,7 @@ class MostViewedPages:
 		self.filtered_list = filtered_list
 
 	def check_article_validity(self, article):
+		print(article)
 		ordered_dates = self.date_objects
 		first_date = ordered_dates[-1].strftime("%Y%m%d")
 		last_date = ordered_dates[0].strftime("%Y%m%d")
@@ -101,6 +102,7 @@ class MostViewedPages:
 		res = requests.get(url, headers=headers).json()
 
 		viewcount_desktop = get_viewcount(res)
+		viewcount_desktop = 1 if viewcount_desktop == 0 else viewcount_desktop
 
 		platform = 'all-access'
 
@@ -108,6 +110,7 @@ class MostViewedPages:
 		res = requests.get(url, headers=headers).json()
 
 		viewcount_all = get_viewcount(res)
+		viewcount_all = 1 if viewcount_all == 0 else viewcount_all
 
 		desktop_percentage = round(viewcount_desktop / viewcount_all, 4)
 		self.desktop_viewcounts.update({article: desktop_percentage})
@@ -123,12 +126,16 @@ class MostViewedPages:
 				break
 			article, _ = entry
 
-			is_valid = self.check_article_validity(article)
+			is_valid = True
+			# is_valid = self.check_article_validity(article)
 			if is_valid:
 				final_list.append(entry)
 				curr_count += 1
 
 		self.final_list = final_list
+
+		for idx in range(0,25):
+			self.check_article_validity(self.filtered_list[idx][0])
 
 	def save_template(self):
 		pagetosave = pywikibot.Page(site,'Veidne:Skatītākie raksti Vikipēdijā/Sagatave')

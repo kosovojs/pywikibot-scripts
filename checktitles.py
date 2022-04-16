@@ -51,11 +51,11 @@ tosave = []
 for title in data:
 	if title[0] in badthings and title[-1] in badthings:
 		#print('pēdiņas sākumā+beigās')
-		tosave.append('pēdiņas sākumā+beigās')
+		tosave.append('* [[{}]]: pēdiņas sākumā+beigās'.format(title))
 	trt = re.findall(regexr,title)
 	if trt:
 		if '  ' in title:
-			trt.append('divas atstarpes')
+			trt.append('* [[{}]]: divas atstarpes'.format(title))
 			#pywikibot.output(title)
 		#tosave.append("* [[{}]]: {}".format(title,', '.join(trt)))#([title,trt])
 	trt = re.findall('\d[-–]\d',title)

@@ -203,6 +203,6 @@ def main():
 	site = pywikibot.Site('lv','wikipedia')
 	page = pywikibot.Page(site,'User:Edgars2007/Missing popular2')
 	page.text = textFor
-	page.save(comment='Bots: atjaunināts', botflag=False, minor=False)
+	page.save(summary='Bots: atjaunināts', botflag=False, minor=False)
 #
 main()

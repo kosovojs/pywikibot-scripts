@@ -39,7 +39,7 @@ def one_cat(OLDCAT):
 		return 0
 	#
 
-	NEWCAT = oldcatObject.getRedirectTarget().title(withNamespace=False)
+	NEWCAT = oldcatObject.getRedirectTarget().title(with_ns=False)
 	#pywikibot.output(NEWCAT)
 
 	SUMMARY = 'kategorija "{}" → "{}"'.format(OLDCAT.replace('_',' '), NEWCAT.replace('_',' '))

@@ -3,6 +3,7 @@
 import re, os, sys
 import json, requests
 import pywikibot, operator
+import html
 import toolforge
 from pywikibot import xmlreader
 from pywikibot import textlib
@@ -46,7 +47,7 @@ title_years = 'Dalībnieks:Edgars2007/Aka/Gadu saites'#nevajag kontekstu
 
 
 def getLastFile1():
-	
+
 	return getLastFile(jobname='dumpsOther')
 
 def parse_findings(regex,pagetext,pagetitle,file,data):
@@ -59,11 +60,11 @@ def parse_findings(regex,pagetext,pagetitle,file,data):
 			sectionname = sectionname.replace('\n',' ')
 			sectionname = re.sub('\s\s*',' ',sectionname)
 			finds.append(sectionname)
-			
+
 		if len(finds)>0:
 			#file.write('* [['+pagetitle+']]: '+', '.join(finds)+'\n')
 			data.append([pagetitle,', '.join(finds)])
-			
+
 #
 def parseFile(fileToParse):
 	num = 0
@@ -73,10 +74,10 @@ def parseFile(fileToParse):
 				num += 1
 				if num % 2500 == 0:
 					print(num)
-				
-				pagetext = textlib.unescape(page.text)
+
+				pagetext = html.unescape(page.text)
 				pagetitle = page.title
-				
+
 				#nākošais
 				parse_findings(check_nakosais,pagetext,pagetitle,file_nakosais,mas_nakosais)
 				#isbn
@@ -91,7 +92,7 @@ def parseFile(fileToParse):
 def putWiki():
 	for one in [(mas_nakosais,title_nakosais),(mas_isbn,title_isbn),(mas_dubes,title_dubes),(mas_sekoj,title_sekoj),(mas_years,title_years)]:
 		mas,title = one
-		
+
 		if len(mas)>0:
 			thetext = ["* [[{}]]: {}".format(f[0],f[1]) for f in mas]
 			page = pywikibot.Page(site,title)
@@ -101,14 +102,14 @@ def putWiki():
 def main():
 	lastdata = getLastFile1()
 	if not lastdata: return 0
-	
+
 	filelink = lastdata['path']
 	dateStr = lastdata['date']
-	
+
 	parseFile(filelink)
 	putWiki()
-	
+
 	setLastDump(str(dateStr),'dumpsOther')
-	
+
 #
 main()
