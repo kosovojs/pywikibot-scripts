@@ -45,7 +45,7 @@ class WikidataDumpParser:
 	redis_conn = None
 
 	def getFile(self):
-		with bz2.open('/mnt/nfs/dumps-labstore1007.wikimedia.org/other/wikibase/wikidatawiki/20210802/wikidata-20210802-all.json.bz2', mode='rt') as f:
+		with bz2.open('/mnt/nfs/dumps-labstore1007.wikimedia.org/other/wikibase/wikidatawiki/20220411/wikidata-20220411-all.json.bz2', mode='rt') as f:
 			f.read(2) # skip first two bytes: "{\n"
 			for line in f:
 				try:
@@ -55,7 +55,7 @@ class WikidataDumpParser:
 
 	def main(self):
 		logging.info('STARTED PROCESS')
-		fileObj = get_dump_lines('/mnt/nfs/dumps-labstore1007.wikimedia.org/other/wikibase/wikidatawiki/20210802/wikidata-20210802-all.json.bz2')
+		fileObj = get_dump_lines('/mnt/nfs/dumps-labstore1007.wikimedia.org/other/wikibase/wikidatawiki/20220411/wikidata-20220411-all.json.bz2')
 
 		for_save = []
 

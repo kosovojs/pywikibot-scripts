@@ -1,13 +1,9 @@
-import pywikibot, re
+import pywikibot, sys
 import toolforge
 from collections import Counter
 
 site = pywikibot.Site('lv', "wikipedia")
 conn = toolforge.connect('lvwiki_p')
-
-null = ''
-
-#file = eval(open("quarry-18859-files-without-licence-lvwiki-run179186.json", "r", encoding='utf-8').read())['rows']
 
 SQL = """select img_name, actor_name as img_user_text, img_timestamp,
 	(select GROUP_CONCAT(distinct t1.tl_title separator '|') from templatelinks t1 WHERE t1.tl_from=page_id) as "Used templates",
@@ -16,9 +12,9 @@ from image
 join actor on img_actor=actor_id
 join page on img_name=page_title and page_namespace=6
 where not exists (select *
-                 from templatelinks
-                  WHERE tl_namespace = 10 and tl_from_namespace=6
-	and tl_title in ("CC-BY-SA-3.0","Aizsargāts_logo","Self","Copyr","NA-70","Albuma_vāks","PD-nezināms","GreenZeb_attēls","CC-BY-SA-3.0_P","PD-autors","CC-BY-SA-2.5","Panoramio","GFDL","Lidingo11-foto","Ekrānuzņēmums","Filmas_plakāts","Bontrager_foto","CC-BY-SA-4.0","Laurijsfoto","6.2_pants","Grāmatas_vāks","Sedols","PD-likvidēta_prese","Trivial","Edgars2007_attēls","File_other","PD-vecs","Fairuse-audio","R_Vambuts_foto","Driver24-foto","Kikosfoto","MFrikmanis-foto","PD-Demis","Coatofarms","CC-BY-3.0","CC-BY-SA-3.0_PL","Attribution","PD","PD-padomju_prese","Non-free_with_NC","PD-ASV","Strīķis","RAntropovs_foto","Papuass-foto","PD-ASV_valdība","Pastmarka","PD-NASA","PD-Itālija","CC-BY-2.0","CC-BY-2.5","CC-BY-4.0","NOAA","Meteo","CC-BY-SA-2.0","Komikss","LU_fotoarhīvs","PD-zinātne","Rēzekne","PD-Krievija","Ivars_Veiliņš-foto","Gerb","DJ_EV-foto","NMackevičs-foto","GMV-foto","PD-Polija","CC-BY-SA-3.0_P3","CC-BY-SA-3.0_P","CC-zero","PD-self")
+                 from templatelinks join linktarget ON tl_target_id = lt_id
+                  WHERE lt_namespace = 10 and tl_from_namespace=6
+	and lt_title in ("CC-BY-SA-3.0","Aizsargāts_logo","Self","Copyr","NA-70","Albuma_vāks","PD-nezināms","GreenZeb_attēls","CC-BY-SA-3.0_P","PD-autors","CC-BY-SA-2.5","Panoramio","GFDL","Lidingo11-foto","Ekrānuzņēmums","Filmas_plakāts","Bontrager_foto","CC-BY-SA-4.0","Laurijsfoto","6.2_pants","Grāmatas_vāks","Sedols","PD-likvidēta_prese","Trivial","Edgars2007_attēls","File_other","PD-vecs","Fairuse-audio","R_Vambuts_foto","Driver24-foto","Kikosfoto","MFrikmanis-foto","PD-Demis","Coatofarms","CC-BY-3.0","CC-BY-SA-3.0_PL","Attribution","PD","PD-padomju_prese","Non-free_with_NC","PD-ASV","Strīķis","RAntropovs_foto","Papuass-foto","PD-ASV_valdība","Pastmarka","PD-NASA","PD-Itālija","CC-BY-2.0","CC-BY-2.5","CC-BY-4.0","NOAA","Meteo","CC-BY-SA-2.0","Komikss","LU_fotoarhīvs","PD-zinātne","Rēzekne","PD-Krievija","Ivars_Veiliņš-foto","Gerb","DJ_EV-foto","NMackevičs-foto","GMV-foto","PD-Polija","CC-BY-SA-3.0_P3","CC-BY-SA-3.0_P","CC-zero","PD-self")
 				and tl_from=page_id)"""
 
 def encode_if_necessary(b):
@@ -81,7 +77,7 @@ page = pywikibot.Page(site,'Vikiprojekts:Vikipēdijas uzlabošana/Attēli/Attēl
 oldtxt = page.get()
 
 page.text = finalout
-page.save(comment='Bots: atjaunināts saraksts', botflag=False, minor=False)
+page.save(summary='Bots: atjaunināts saraksts', botflag=False, minor=False)
 
 #fileS = open("atteli-nav lic.txt", "w", encoding='utf-8')
 #fileS.write(finalout)

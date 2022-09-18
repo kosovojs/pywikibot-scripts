@@ -1,8 +1,6 @@
 import requests, json, pywikibot, re, os, datetime, mwparserfromhell
 from bs4 import BeautifulSoup
 
-#os.chdir(r'projects/sportsTables')
-
 templateCheck = "#invoke:sports table"
 enwp = pywikibot.Site("en", "wikipedia")
 lvwp = pywikibot.Site("lv", "wikipedia")

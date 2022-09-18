@@ -6,10 +6,10 @@ start = datetime.today() - timedelta(minutes=65)
 starttime = start.strftime('%Y-%m-%dT%H:%M:%S.000Z')#start.strftime('%Y%m%d%H%M%S')
 
 #2018-05-06T08:13:37.000Z
-print(starttime)
+#print(starttime)
 
 site = pywikibot.Site('lv', 'wikipedia')
-site.login()
+#site.login()
 
 revert_regex = 'izdarīto izmaiņu (\d+)'
 
@@ -22,23 +22,12 @@ revert_regex = 'izdarīto izmaiņu (\d+)'
 file1 = open('patrollog_undone.txt','a', encoding='utf-8')
 file2 = open('patrollog_undone1.txt','a', encoding='utf-8')
 
-def patrol_edit(revid):
-	params = {
-		"action": "patrol",
-		"format": "json",
-		"revid": revid,
-		'token': fuckintoken
-	}
-	req = api.Request(site=site, **params)
-	data = req.submit()
-#
-
 def get_username(text):
 	reg = 'Dalībnie[^:]+:([^\/]+).*?'
-	blah = re.search(reg,text)
-	if blah:
-		return blah.group(1)
-	
+	res = re.search(reg,text)
+	if res:
+		return res.group(1)
+
 	return False
 
 def get_rc():
@@ -52,18 +41,18 @@ def get_rc():
 		"rclimit": "max",
 		"rctype": "edit|new"
 	}
-	
+
 	#https://lv.wikipedia.org/w/api.php?action=query&format=json&list=recentchanges&rcprop=title|timestamp|ids|user|comment|flags|loginfo|tags|patrolled&rclimit=500&rctype=edit|new&rcend=2018-05-06T11:56:58.000Z&rcdir=older
-	
-	
-	req = api.Request(site=site, **params)
+
+
+	req = api.Request(site=site, parameters=params)
 	data = req.submit()
-	
+
 	#r = requests.get('https://lv.wikipedia.org/w/api.php?',params = params)
 	#r.encoding = 'utf-8'
 	#json_data = eval(r.text)
 	#pywikibot.output(data['query']["recentchanges"])
-	
+
 	return data['query']["recentchanges"]
 #
 
@@ -75,7 +64,7 @@ for change in rchanges:
 	#pywikibot.output(change)
 	try:
 		summary = change["comment"] if "comment" in change else ''
-		
+
 		if summary.startswith('Atcēlu '):
 			sdfsdfsfd = re.search(revert_regex,summary)
 			if sdfsdfsfd:
@@ -85,11 +74,11 @@ for change in rchanges:
 				p = site.patrol(revid=int(theedittopatrol))
 				next(p)
 				#patrol_edit(int(theedittopatrol))
-		
-			
+
+
 
 		if 'unpatrolled' not in change: continue
-		
+
 		if change['ns']==4 and change['title']=='Vikipēdija:Smilšu kaste':
 			#do patrol
 			pywikibot.output('Patrolling: {}'.format(change["revid"]))
@@ -102,8 +91,8 @@ for change in rchanges:
 			file2.write('{}\n'.format(change["revid"]))
 			p = site.patrol(revid=change['revid'])
 			next(p)
-		
-		
+
+
 		if change['ns'] in (2,3) and get_username(change['title'])==change["user"]:
 			#do patrol
 			pywikibot.output('Patrolling: {}'.format(change["revid"]))

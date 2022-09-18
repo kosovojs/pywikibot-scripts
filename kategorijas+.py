@@ -1,4 +1,4 @@
-import pywikibot, re, os
+import pywikibot, re, os, sys
 import toolforge
 from nobots import deny_bots
 
@@ -19,7 +19,7 @@ def run_query(query):
 		rows = cursor.fetchall()
 	except KeyboardInterrupt:
 		sys.exit()
-	
+
 	return rows
 #
 SQL_main = """SELECT p.page_title, GROUP_CONCAT(cl_to SEPARATOR '|') as cats
@@ -67,31 +67,23 @@ badarticles.extend(no_cats)
 def removecats(category):
 	reg = '(\d{1,4}\._gadā_(dzimušie|mirušie)|Nepabeigti_raksti)'#reg = '\d{1,4}\._gadā_(dzimušie|mirušie)'
 	res = re.search(reg, category)#res = re.match(reg, category)
-	
+
 	if res:
 		return True
 
 main_list = run_query(SQL_main)
-
 
 for article in main_list:
 	article = [encode_if_necessary(f) for f in article]
 	art, cats = article
 	cats2 = cats.split('|')
 	if 'dzimušie' in cats or 'mirušie' in cats or 'Nepabeigti' in cats:
-		#pywikibot.output(cats2)
 		cats2 = [cat for cat in cats2 if not removecats(cat)]
-		#pywikibot.output(cats2)
-	
-	#pywikibot.output(cats)
-	
+
 	catdiff = set(cats2) - set(cattocheck)
-	
+
 	if len(catdiff)==0:
 		badarticles.append(art)
-#
-with open('badarticles without real cats-2.txt', "w", encoding='utf-8') as filsesave:
-	filsesave.write(str(badarticles))
 
 tpltext = "{{kategorijas+}}"
 
@@ -101,24 +93,24 @@ def main():
 	for article1 in badarticles:
 		if article1 in ['Sākumlapa']:
 			continue
-		pywikibot.output('\t'+article1)
+		print('\t'+article1)
 		page = pywikibot.Page(site,article1)
 		try:
 			oldtxt = page.get(get_redirect=True)
 		except pywikibot.exceptions.NoPage:
 			continue
-		
+
 		if deny_bots(oldtxt,'kategorijas+'): continue
-		
+
 		searchtl = re.search(reg, oldtxt)
-		
+
 		if searchtl:
 			print('already has template')
 			continue
-			
+
 		newtxt = tpltext + "\n"+oldtxt
 		page.text = newtxt
-		
-		page.save(comment='Bots: pievienota {{kategorijas+}} veidne. [[Dalībnieka diskusija:Edgars2007|Kļūda?]]', botflag=True, minor=False)
+
+		page.save(summary='Bots: pievienota {{kategorijas+}} veidne. [[Dalībnieka diskusija:Edgars2007|Kļūda?]]', botflag=True, minor=False)
 #
 main()

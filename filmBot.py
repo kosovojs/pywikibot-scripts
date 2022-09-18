@@ -177,7 +177,7 @@ SQLMAIN = """select orig.page_title, (select m2.ll_title from langlinks m2 where
 from revision
 join page orig on orig.page_id=rev_page and orig.page_is_redirect=0 and orig.page_namespace=0
 where rev_timestamp>{} and rev_parent_id=0
-and exists (select * from templatelinks t where orig.page_id = t.tl_from AND t.tl_namespace = 10 AND t.tl_title='Filmas_infokaste')
+and exists (select * from templatelinks t join linktarget ON tl_target_id = lt_id where orig.page_id = t.tl_from AND lt_namespace = 10 AND lt_title='Filmas_infokaste')
 """
 
 def get_last_run():

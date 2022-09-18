@@ -5,7 +5,7 @@ site.login()
 site.get_tokens('edit')
 
 def doAPI(datestr):
-	r = pywikibot.data.api.Request(site=site, action="expandtemplates", format="json", 
+	r = pywikibot.data.api.Request(site=site, action="expandtemplates", format="json",
 									text='{{Vai tu zināji/Sagatave|' + datestr + '}}', prop='wikitext').submit()
 	#
 	outputstr = r['expandtemplates']['wikitext']
@@ -21,10 +21,8 @@ def putNotif():
 
 nextday = datetime.datetime.now() + datetime.timedelta(days=1)
 nextt ='{d.day}'.format(d=nextday)
-print(nextt)
 newot = doAPI(nextt)
 newot = newot.strip()
-pywikibot.output(newot)
 
 if newot=='':
 	putNotif()

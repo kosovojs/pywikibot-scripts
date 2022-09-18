@@ -1,6 +1,4 @@
-#!/usr/bin/python
-# -*- coding: UTF-8 -*-
-import re, pywikibot
+import re, pywikibot, sys
 from datetime import datetime
 import toolforge
 
@@ -52,15 +50,13 @@ ORDER BY all_backlinks DESC, direct_links DESC, redirects, disambigs.page_title
 """
 
 def run_query():
-	#query = query.encode('utf-8')
-	#print(query)
 	try:
 		cursor = conn.cursor()
 		cursor.execute(SQL)
 		rows = cursor.fetchall()
 	except KeyboardInterrupt:
 		sys.exit()
-	
+
 	return rows
 #
 
@@ -71,36 +67,19 @@ reg = re.compile(r'{{(template:|veidne:)?(orphan|izolēts raksts)[\|\}]', re.I)
 def main():
 	for article in itemlist:
 		article = encode_if_necessary(article[0])
-		pywikibot.output('\t'+article)
+		print('\t'+article)
 		page = pywikibot.Page(site,article)
 		oldtxt = page.get()
-		
+
 		searchtl = re.search(reg, oldtxt)
-		
+
 		if searchtl:
 			print('already has template')
 			continue
-			
+
 		newtxt = tpltext + "\n"+oldtxt
 		page.text = newtxt
-		
-		page.save(comment='Bots: pievienota {{izolēts raksts}} veidne', botflag=True, minor=False)
-#
-def mainOOOOOOOOOOLLLLLLLLLLLLLLDDDDDDDDDDDDDDD():
-	for article in itemlist:
-		pywikibot.output('\t'+article['title'])
-		page = pywikibot.Page(site,article['title'])
-		oldtxt = page.get()
-		
-		searchtl = re.search(reg, oldtxt)
-		
-		if searchtl:
-			print('already has template')
-			continue
-			
-		newtxt = "{{izolēts raksts|date=2017. gada aprīlis}}\n"+oldtxt
-		page.text = newtxt
-		
-		page.save(comment='Bots: pievienota {{izolēts raksts}} veidne', botflag=True, minor=False)
-		
+
+		page.save(summary='Bots: pievienota {{izolēts raksts}} veidne', botflag=True, minor=False)
+
 main()
