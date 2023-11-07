@@ -7,14 +7,15 @@ conn = toolforge.connect('lvwiki_p')
 #data = get_quarry('4861')
 
 SQL = """SELECT #page_title, tl_title
-p.page_title, COUNT(t.tl_title)
+p.page_title, COUNT(lt_title)
 FROM templatelinks t
+join linktarget ON tl_target_id = lt_id
 join page p on p.page_id = t.tl_from
 INNER JOIN categorylinks c ON p.page_id = c.cl_from AND c.cl_to = 'Visi_Vikipēdijas_uzlabojamie_raksti'
-where t.tl_namespace = 10 AND t.tl_title IN ("Dzēst", "Dzēst+", "Apvienot", "Apšaubīts", "Atdalīt", "Atjaunināt", "Atsauces+", "Atsevišķs_raksts", "Atveidošana", "Autobiogrāfija", "Autortiesību_problēmas", "Autortiesību_problēmas_(maza)", "Eksperts", "Enciklopēdisks_stils", "Infokaste+", "Izolēts_raksts", "Jāuzlabo", "Jāpārraksta", "Kategorija_jādala", "Ievads+", "Kategorijas+", "Konfl", "Informācijas_izklāsts", "Neatkarīgas_atsauces+", "Nepilnīgs", "Nenozīmīgs", "Nepieciešama_atsauce", "Nepieciešama_dokumentācija", "Nepilnīga_nodaļa", "Noformējums+", "Novecojis_sastāvs", "Novecojusi_saite", "Papildu_atsauces+", "Pareizrakstība", "Pārrakstīt", "Pov", "Sadalīt", "Sadaļas+", "Saistīts_teksts", "Slikts_tulkojums", "Starpviki+", "Teksts+", "Under_construction", "Viens_avots", "Vikisaites+", "Svešvaloda")
+where lt_namespace = 10 AND lt_title IN ("Dzēst", "Dzēst+", "Apvienot", "Apšaubīts", "Atdalīt", "Atjaunināt", "Atsauces+", "Atsevišķs_raksts", "Atveidošana", "Autobiogrāfija", "Autortiesību_problēmas", "Autortiesību_problēmas_(maza)", "Eksperts", "Enciklopēdisks_stils", "Infokaste+", "Izolēts_raksts", "Jāuzlabo", "Jāpārraksta", "Kategorija_jādala", "Ievads+", "Kategorijas+", "Konfl", "Informācijas_izklāsts", "Neatkarīgas_atsauces+", "Nepilnīgs", "Nenozīmīgs", "Nepieciešama_atsauce", "Nepieciešama_dokumentācija", "Nepilnīga_nodaļa", "Noformējums+", "Novecojis_sastāvs", "Novecojusi_saite", "Papildu_atsauces+", "Pareizrakstība", "Pārrakstīt", "Pov", "Sadalīt", "Sadaļas+", "Saistīts_teksts", "Slikts_tulkojums", "Starpviki+", "Teksts+", "Under_construction", "Viens_avots", "Vikisaites+", "Svešvaloda")
 		and tl_from_namespace=0 and page_is_redirect=0
 GROUP BY p.page_title
-ORDER BY COUNT(t.tl_title) DESC
+ORDER BY COUNT(lt_title) DESC
 LIMIT 300"""
 
 def encode_if_necessary(b):
@@ -31,7 +32,7 @@ def run_query():
 		rows = cursor.fetchall()
 	except KeyboardInterrupt:
 		sys.exit()
-	
+
 	return rows
 #
 data = run_query()

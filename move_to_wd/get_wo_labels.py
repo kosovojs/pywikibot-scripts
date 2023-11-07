@@ -1,7 +1,7 @@
 import re, os, sys, toolforge, logging
 from gather_info import get_labels_from_wikidata
 
-logging.basicConfig(filename='get_wo_labels.log', filemode='a+', level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+logging.basicConfig(filename='get_wo_labels_.log', filemode='a+', level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 
 conn = toolforge.connect('wikidatawiki_p','analytics')
 
@@ -53,7 +53,7 @@ query_res = run_query(SQLMAIN,conn)
 data = [encode_if_necessary(f[0]) for f in query_res]
 
 def add_to_file(items):
-	with open('data_last.txt', 'a+', encoding='utf-8') as file_w:
+	with open('data_last__.txt', 'a+', encoding='utf-8') as file_w:
 		file_w.write(str(items)+"\n")
 
 logging.info("Found {} items".format(len(data)))

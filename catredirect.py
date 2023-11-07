@@ -11,7 +11,7 @@ repl = r'#REDIRECT [[:Kategorija:\1]]\n{{kat pāradresācija|Kategorija:\1}}'
 SQL = """SELECT CONCAT('Kategorija:',p.page_title) FROM page p
 #LEFT JOIN templatelinks t ON p.page_id = t.tl_from AND t.tl_namespace = 10 AND t.tl_title NOT IN ('Kat_pāradresācija')
 Where p.page_namespace=14 and p.page_is_redirect=1
-and not exists (select * from templatelinks t where p.page_id = t.tl_from AND t.tl_namespace = 10 AND t.tl_title='Kat_pāradresācija')"""
+and not exists (select * from templatelinks t join linktarget ON tl_target_id = lt_id where p.page_id = t.tl_from AND lt_title='Kat_pāradresācija')"""
 
 def encode_if_necessary(b):
 	if type(b) is bytes:
@@ -27,7 +27,7 @@ def run_query():
 		rows = cursor.fetchall()
 	except KeyboardInterrupt:
 		sys.exit()
-	
+
 	return rows
 #
 data = run_query()
@@ -38,12 +38,12 @@ for categ in data:
 	categ = [encode_if_necessary(f) for f in categ]
 	page = pywikibot.Page(site,categ[0])
 	wikitext = page.get(get_redirect=True)
-	
+
 	if 'kat pāradresācija' in wikitext:
 		continue
-	
+
 	newtext = re.sub(patt,repl,wikitext)
-	
+
 	if newtext!=wikitext:
 		page.text = newtext
 		page.save(summary='kategorijas pāradresācija')

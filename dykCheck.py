@@ -1,4 +1,5 @@
-import pywikibot, datetime
+import pywikibot
+from datetime import date, timedelta
 
 site = pywikibot.Site("lv", "wikipedia")
 site.login()
@@ -14,15 +15,15 @@ def doAPI(datestr):
 
 message = """{{ping|Biafra|Edgars2007|Papuass|ScAvenger}} lapā "[[Veidne:Vai tu zināji/Sagatave]]" nav pievienoti fakti rītdienai! Lūdzu pievienojiet. --~~~~"""
 
-def putNotif():
+def putNotif(day_name):
 	r = pywikibot.data.api.Request(site=site, action='edit', format='json',
-										title='Vikipēdija:Administratoru ziņojumu dēlis', section='new', sectiontitle='Nav faktu rītdienai', text=message,token=site.tokens['edit'], summary='Nav faktu rītdienai').submit()#, summary='tests3'
+										title='Vikipēdija:Administratoru ziņojumu dēlis', section='new', sectiontitle='Nav faktu rītdienai ({})'.format(day_name), text=message,token=site.tokens['edit'], summary='Nav faktu rītdienai').submit()#, summary='tests3'
 #
 
-nextday = datetime.datetime.now() + datetime.timedelta(days=1)
-nextt ='{d.day}'.format(d=nextday)
-newot = doAPI(nextt)
+yesterday = date.today() + timedelta(1)
+nextday =  yesterday.strftime('%Y-%m-%d')
+newot = doAPI(nextday)
 newot = newot.strip()
 
 if newot=='':
-	putNotif()
+	putNotif(nextday)

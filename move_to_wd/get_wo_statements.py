@@ -62,7 +62,7 @@ query_res = run_query(SQLMAIN,conn)
 data = [encode_if_necessary(f[0]) for f in query_res]
 
 def add_to_file(items):
-	with open('data_las.txt', 'a+', encoding='utf-8') as file_w:
+	with open('data_las______.txt', 'a+', encoding='utf-8') as file_w:
 		file_w.write(str(items)+"\n")
 
 logging.info("Found {} items".format(len(data)))

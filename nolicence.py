@@ -6,7 +6,7 @@ site = pywikibot.Site('lv', "wikipedia")
 conn = toolforge.connect('lvwiki_p')
 
 SQL = """select img_name, actor_name as img_user_text, img_timestamp,
-	(select GROUP_CONCAT(distinct t1.tl_title separator '|') from templatelinks t1 WHERE t1.tl_from=page_id) as "Used templates",
+	(select GROUP_CONCAT(distinct lt_title separator '|') from templatelinks t1 join linktarget ON tl_target_id = lt_id WHERE t1.tl_from=page_id) as "Used templates",
     (SELECT count(il_from) FROM imagelinks where il_to=img_name) as "Imagelinks"
 from image
 join actor on img_actor=actor_id

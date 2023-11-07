@@ -145,7 +145,7 @@ def get_labels_from_wikidata(items):
 	#all_items_res = do_all_api(itemsforwork)
 	#apires = open('personas-api-res.txt','w', encoding='utf-8')
 	#apires.write(str(all_items_res))
-	do_all_labels(itemsforwork,{}, 'no_lv_label.txt')
+	do_all_labels(itemsforwork,{}, 'no_lv_label_.txt')
 
 #
 #main()
