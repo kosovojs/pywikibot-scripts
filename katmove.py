@@ -35,6 +35,8 @@ def run_query():
 def one_cat(OLDCAT):
 	oldcatObject = pywikibot.Page(site,"Kategorija:{}".format(OLDCAT))
 
+	if OLDCAT == 'User_vro': return 0 # doesn't work with babel categories
+
 	if not oldcatObject.isRedirectPage():
 		return 0
 	#

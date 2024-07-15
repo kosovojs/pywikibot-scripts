@@ -9,7 +9,7 @@ from scripts import upload
 #Kārtējais pirmais randiņš
 
 conn = toolforge.connect('lvwiki_p','analytics')
-connLabs = toolforge.connect_tools('s53143__meta_p')
+connLabs = toolforge.toolsdb('s53143__meta_p')
 cursor1 = connLabs.cursor()
 
 ensite = pywikibot.Site("en", "wikipedia")

@@ -1,12 +1,10 @@
 #!/usr/bin/python
 # -*- coding: utf-8  -*-
-import re, os
+import re
 import html
-import json, requests
 import pywikibot, operator
 import toolforge
 from pywikibot import xmlreader
-from pywikibot import textlib
 from bz2 import BZ2File
 from collections import Counter
 from checkDump import getLastFile, setLastDump

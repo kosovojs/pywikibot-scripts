@@ -1,14 +1,14 @@
 import requests
 import json
 import urllib.parse
-import pywikibot, re
+#import pywikibot, re
 import toolforge
 
-lvsite = pywikibot.Site("lv", "wikipedia")
+#lvsite = pywikibot.Site("lv", "wikipedia")
 conn = toolforge.connect('lvwiki_p')
 
 SQL = """Select page_title
-from page where page_namespace=0"""# and page_is_redirect=0
+from page where page_namespace=0 and page_is_redirect=1"""# and page_is_redirect=0
 
 
 def encode_if_necessary(b):
@@ -25,7 +25,7 @@ def run_query():
 		rows = cursor.fetchall()
 	except KeyboardInterrupt:
 		sys.exit()
-	
+
 	return rows
 #
 lvwiki = run_query()#quarry('14884','1')
@@ -34,5 +34,7 @@ for_out = []
 
 allarticles = [encode_if_necessary(b[0]).replace('_',' ') for b in lvwiki]
 
+print(len(allarticles))
+
 with open("quarry_results_links_lv.txt", "w", encoding='utf-8') as file:
-	file.write(str(allarticles))
+	file.write(json.dumps(allarticles))

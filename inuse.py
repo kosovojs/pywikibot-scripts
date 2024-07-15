@@ -69,6 +69,8 @@ def parse_one_article(title,file):
 	#
 	#print([lastRevWithoutTpl, firstRevWithTpl])
 
+	if not firstRevWithTpl or not lastRevWithoutTpl: return 0
+
 
 	date_from = firstRevWithTpl['timestamp']
 	user_orig = firstRevWithTpl['user']

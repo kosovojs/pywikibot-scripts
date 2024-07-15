@@ -3,7 +3,7 @@ import toolforge
 import pytz, datetime
 
 site = pywikibot.Site("lv", "wikipedia")
-conn = toolforge.connect_tools('s53143__meta_p')
+conn = toolforge.toolsdb('s53143__meta_p')
 
 
 my_date1 = datetime.datetime.now(pytz.timezone('Europe/Riga'))

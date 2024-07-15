@@ -7,7 +7,7 @@ file = open('file_licence.txt','r', encoding='utf-8').read()
 
 site = pywikibot.Site('lv', "wikipedia")
 conn = toolforge.connect('lvwiki_p')
-connLabs = toolforge.connect_tools('s53143__meta_p')
+connLabs = toolforge.toolsdb('s53143__meta_p')
 cursor1 = connLabs.cursor()
 
 def get_last_run():

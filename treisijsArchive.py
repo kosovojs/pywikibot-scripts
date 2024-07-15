@@ -9,7 +9,7 @@ import pymysql
 utc_timezone = timezone("UTC")
 lva_timezone = timezone("Europe/Riga")
 
-conn = toolforge.connect_tools('s53143__missing_p')
+conn = toolforge.toolsdb('s53143__missing_p')
 conn1 = toolforge.connect('lvwiki_p','analytics')
 
 def utc_to_local(utc_dt):
@@ -33,7 +33,7 @@ def run_query(query,connection):
 		rows = cursor.fetchall()
 	except KeyboardInterrupt:
 		sys.exit()
-	
+
 	return rows
 #
 
