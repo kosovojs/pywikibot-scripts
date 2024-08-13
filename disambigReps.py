@@ -90,12 +90,12 @@ sql1 = '''SELECT disambigs.page_title, COUNT(DISTINCT links.pl_from) AS direct_l
 	FROM (SELECT * FROM page_props WHERE pp_propname = 'disambiguation') AS disambigs
 	JOIN page AS disambigs
 		ON disambigs.page_id = pp_page
-	JOIN (SELECT * FROM pagelinks WHERE pl_from_namespace = 0) AS links
-		ON links.pl_title = disambigs.page_title AND links.pl_namespace = disambigs.page_namespace
+	JOIN (SELECT * FROM pagelinks join linktarget lt on lt.lt_id=pl_target_id WHERE pl_from_namespace = 0) AS links
+		ON links.lt_title = disambigs.page_title AND links.lt_namespace = disambigs.page_namespace
 	LEFT JOIN page AS redirects
 		ON redirects.page_is_redirect = 1 AND redirects.page_id = links.pl_from AND redirects.page_namespace = disambigs.page_namespace
-	LEFT JOIN (SELECT * FROM pagelinks WHERE pl_from_namespace = 0) AS links_to_redirects
-		ON links_to_redirects.pl_title = redirects.page_title AND links_to_redirects.pl_namespace = redirects.page_namespace
+	LEFT JOIN (SELECT * FROM pagelinks join linktarget lt on lt.lt_id=pl_target_id WHERE pl_from_namespace = 0) AS links_to_redirects
+		ON links_to_redirects.lt_title = redirects.page_title AND links_to_redirects.lt_namespace = redirects.page_namespace
 GROUP BY disambigs.page_title
 ORDER BY all_backlinks DESC, direct_links DESC, redirects, disambigs.page_title;
 '''

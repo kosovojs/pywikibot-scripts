@@ -7,11 +7,12 @@ conn = toolforge.connect('lvwiki_p','analytics')
 #apvienot ar Vikiprojekts:Vikipēdijas uzlabošana/Raksti/Pieprasītās lapas
 
 SQL = """select pl_title,c
-from (select pl_title , count(*) as c , pl_namespace
-      from pagelinks
-      where pl_from_namespace=0 and pl_namespace=0
-      group by pl_title, pl_namespace
-      having count(*)>10) as pl
+from (select lt.lt_title as pl_title , count(*) as c , lt.lt_namespace as pl_namespace
+      from pagelinks pl
+      join linktarget lt on lt.lt_id=pl.pl_target_id
+      where pl.pl_from_namespace=0 and lt.lt_namespace=0
+      group by lt.lt_title, lt.lt_namespace
+      having count(*)>100) as pl
   left join page
     on (pl_title=page_title and page_namespace= pl_namespace)
 where page_id is null
