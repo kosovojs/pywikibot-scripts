@@ -7,10 +7,8 @@ import toolforge
 #lvsite = pywikibot.Site("lv", "wikipedia")
 conn = toolforge.connect('etwiki_p')
 
-SQL = """select page_title as redirect_page, rd_title as redirect_target
-from redirect
-join page on page_id=rd_from and page_namespace=0
-where rd_namespace=0"""# and page_is_redirect=0
+SQL = """Select page_title, page_len, page_is_redirect
+from page where page_namespace=0"""# and page_is_redirect=0
 
 
 def encode_if_necessary(b):
@@ -34,9 +32,9 @@ lvwiki = run_query()#quarry('14884','1')
 
 for_out = []
 
-allarticles = [[encode_if_necessary(b[0]).replace('_',' '), encode_if_necessary(b[1]).replace('_',' ')] for b in lvwiki]
+allarticles = [[encode_if_necessary(b[0]).replace('_',' '), b[1], b[2]] for b in lvwiki]
 
 print(len(allarticles))
 
-with open("quarry-etwiki-redirects.txt", "w", encoding='utf-8') as file:
+with open("etwiki_all_ns0.txt", "w", encoding='utf-8') as file:
 	file.write(json.dumps(allarticles))

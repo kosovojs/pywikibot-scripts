@@ -63,8 +63,8 @@ def notifyMe(newtext):
 #
 
 def notify(user,diffid,title,reason,debug):
-	if user=='Edgars2007':
-		user='Experts'
+	#if user=='Edgars2007':
+	#	user='Experts'
 
 	if checkIfIP(user):
 		return
@@ -386,9 +386,16 @@ if __name__=='__main__':
 				dtext=data["parse"]["text"]["*"]
 				if dtext.find("{{NoBracketBot}}")!=-1: continue
 				dtext=sub("\|name=.+?(?=[\|}])|<math>.+?<\/math>|<pre>.+?</pre>|\|title=.+?(?=[\|}])","",dtext)
+				print('here1')
+				print(dtext)
+				print(matchbrackets(dtext))
+
 				if matchbrackets(dtext)==(0,0,0,0): continue
+				print('here2')
 				if search(r'(?<!\d)1\)(.*)(?<!\d)2\)',dtext,DOTALL): continue
+				print('here3')
 				if search(r'(?<!\w)a\)(.*)(?<!\w)b\)',dtext,DOTALL): continue
+				print('here4')
 				#fp=getpage(rev+foundmistake.pageid)
 				#revisions=json.load(fp)
 				revisions = getpage(rev+foundmistake.pageid)

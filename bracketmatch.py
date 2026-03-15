@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-import cgi, re
+import html, re
 MISMATCH_DISTANCE=100
 
 escape_table = {
@@ -58,7 +58,7 @@ def _getnextmismatch(text,mismatches,ret,cur,i,highlighted,started):
 		ch=text[i]
 		if ch=="\n":
 			if highlighted:
-				cur+=cgi.escape(ch)
+				cur+=html.escape(ch)
 				break
 			else:
 				cur=""
@@ -70,7 +70,7 @@ def _getnextmismatch(text,mismatches,ret,cur,i,highlighted,started):
 			highlighted=True
 		else:
 			if started:
-				cur+=cgi.escape(ch)
+				cur+=html.escape(ch)
 			elif not ch.isalnum():
 				started=True
 		if i==mismatches[0]+MISMATCH_DISTANCE:
