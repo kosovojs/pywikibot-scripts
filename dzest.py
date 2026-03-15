@@ -3,8 +3,8 @@ from datetime import date, datetime, timedelta
 from pywikibot import textlib
 
 site = pywikibot.Site("lv", "wikipedia")
-site.login()
-site.get_tokens('edit')
+#site.login()
+#site.get_tokens('edit')
 
 #os.chdir(r'projects/lv')
 
@@ -25,10 +25,10 @@ def do_api_req(wikipedia,title,cont=''):
 
 	r = requests.get('https://{}.wikipedia.org/w/api.php?'.format(wikipedia),params = params)
 	r.encoding = 'utf-8'
-	json_data = eval(r.text)
+	#json_data = eval(r.text)
 	#pywikibot.output(json_data["continue"])
 
-	return json_data
+	return r.json()
 #
 inuseregex = '{{\s*(template:|veidne:)?\s*(dzēst|delete)( attēlu)?'
 

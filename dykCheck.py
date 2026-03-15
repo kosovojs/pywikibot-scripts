@@ -2,8 +2,8 @@ import pywikibot
 from datetime import date, timedelta
 
 site = pywikibot.Site("lv", "wikipedia")
-site.login()
-site.get_tokens('edit')
+#site.login()
+#site.get_tokens('edit')
 
 def doAPI(datestr):
 	r = pywikibot.data.api.Request(

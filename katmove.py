@@ -6,12 +6,13 @@ site = pywikibot.Site("lv", "wikipedia")
 conn = toolforge.connect('lvwiki_p')
 
 SQL = """SELECT p.page_title, COUNT(cl.cl_from) AS anz
-			FROM page p
-			LEFT JOIN categorylinks cl ON p.page_title = cl.cl_to
+			FROM categorylinks cl
+			join linktarget ON cl_target_id = lt_id
+			JOIN page p  ON p.page_title = lt_title
 			WHERE p.page_namespace = 14
 			AND p.page_is_redirect = 1
 			GROUP BY p.page_title
-            having anz>0"""
+			having anz>0"""
 
 def encode_if_necessary(b):
 	if type(b) is bytes:
@@ -36,6 +37,8 @@ def one_cat(OLDCAT):
 	oldcatObject = pywikibot.Page(site,"Kategorija:{}".format(OLDCAT))
 
 	if OLDCAT == 'User_vro': return 0 # doesn't work with babel categories
+
+	if OLDCAT == 'Lapas_ar_kartēm': return 0
 
 	if not oldcatObject.isRedirectPage():
 		return 0

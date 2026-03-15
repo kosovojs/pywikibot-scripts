@@ -53,8 +53,9 @@ bot_ids = set([b.get('actor_id', 0) for b in bot_ids])
 
 bot_usernames = """SELECT page_title
 from categorylinks
+join linktarget ON cl_target_id = lt_id
 join page on page.page_id=cl_from
-where cl_to='Visi_Vikipēdijas_boti'
+where lt_title='Visi_Vikipēdijas_boti'
 """
 bot_usernames = run_query(bot_usernames)
 bot_usernames = set([b.get('page_title', 0) for b in bot_usernames])
